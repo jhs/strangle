@@ -1,10 +1,20 @@
+import sys
 from distutils.core import setup, Extension
+
+extras = {}
+
+if sys.platform == 'sunos5':
+    # This handles Solaris systems with BIND installed from the package
+    extras['include_dirs'] = ['/usr/local/bind/include']
+    extras['library_dirs'] = ['/usr/local/bind/lib']
+    extras['extra_link_args'] = ['-mimpure-text']
 
 libbind = Extension('Constrict.libbind',
 		    [
 		     'Constrict/libbind.c',
 		    ],
 		    libraries=['bind'],
+		    **extras
 		   )
 
 setup( name         = 'Constrict',
