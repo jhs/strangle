@@ -23,6 +23,9 @@ import libbind
 class ConstrictError(StandardError):
     """Error parsing DNS packet"""
 
+class DNSSectionError(ConstrictError):
+    """Error generating a message section"""
+
 class DNSRecordError(ConstrictError):
     """Error accessing record in message"""
 
@@ -58,12 +61,9 @@ class DNSMessage(object):
 
 	for sectionName, sectionLabel in zip(sectionNames, sectionLabels):
 	    section = getattr(libbind, sectionLabel)
-
 	    totalRecords = libbind.ns_msg_count(msg, section)
 	    if totalRecords > 0:
-		self.sections[sectionName] = []
-		for recordNum in range(0, totalRecords):
-		    self.sections[sectionName].append(DNSRecord(msg, sectionName, recordNum))
+		self.sections[sectionName] = DNSSection(msg, section=sectionName)
     
     def __str__(self):
 	info = []
@@ -135,7 +135,33 @@ class DNSFlags(object):
 	"  Recursion Available: %s" % str(self.recursionAvailable),
 	"  Response Code      : %d" % self.response,
 	))
+
+class DNSSection(object):
+    """A section of a DNS message.  Typically these are 'question', 'answer',
+       'authority', or 'additional'.
+
+       Members:
+           name     - name of the section
+    """
+
+    def __init__(self, msg, *args, **kwargs):
     
+	if type(msg) is not libbind.ns_msg:
+	    raise DNSSectionError, "DNSSection initialized but without an ns_msg"
+	
+	try:
+	    sectionName = kwargs['section']
+	except KeyError:
+	    try:
+		sectionName = args[0]
+	    except IndexError:
+		raise DNSSectionError, "DNSSection requires a section name argument"
+	
+	if sectionName not in ('question', 'answer', 'authority', 'additional'):
+	    raise DNSSectionError, "DNSSection requires a valid section name"
+
+	self.name = sectionName
+
 class DNSRecord(object):
     """An individual record from a DNS message
 
@@ -151,6 +177,6 @@ class DNSRecord(object):
 	"""Fills in all record values to the object members"""
 
 	if type(msg) is not libbind.ns_msg:
-	    raise DNSRecordError, "DNSFlags initialized but without an ns_msg"
+	    raise DNSRecordError, "DNSRecord initialized but without an ns_msg"
 
 # vim: sts=4 sw=4 noet

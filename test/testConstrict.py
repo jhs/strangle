@@ -162,8 +162,33 @@ class testDNSFlags(unittest.TestCase):
 	    flags = Constrict.DNSFlags(msg)
 	    self.assertEquals(flags.response, message['flags']['ns_f_rcode'])
 
+class testDNSSection(unittest.TestCase):
+    """Tests all interfaces to the DNSSection object"""
+    def setUp(self):
+	from Constrict import libbind
+
+	msgFileName = "data/oreilly.com-response"
+	self.msg    = libbind.ns_msg( file(msgFileName).read() )
+
+    def testDetectsBadArgs(self):
+	"""Test that DNSSection properly handles bad arguments"""
+	self.assertRaises(TypeError, Constrict.DNSSection)
+	self.assertRaises(Constrict.DNSSectionError, Constrict.DNSSection, 'useless')
+
+    def testDetectsMissingSect(self):
+	"""Test that DNSSection properly handles a missing section argument"""
+	self.assertRaises(Constrict.DNSSectionError, Constrict.DNSSection, self.msg)
+
+    def testDetectsSect(self):
+	"""Test that DNSSection can get the section name from args or kwargs"""
+	sect = Constrict.DNSSection(self.msg, 'authority')
+	assert(type(sect) is Constrict.DNSSection)
+
+	sect = Constrict.DNSSection(self.msg, section="additional")
+	assert(type(sect) is Constrict.DNSSection)
+	
 class testDNSRecord(unittest.TestCase):
-    """Tests all interfaces to the DNSsection object"""
+    """Tests all interfaces to the DNSRecord object"""
     def setUp(self):
 	from Constrict import libbind
 
@@ -174,7 +199,7 @@ class testDNSRecord(unittest.TestCase):
 	self.msg         = libbind.ns_msg( file(self.msgFileName).read() )
 
     def testDetectsBadType(self):
-	"""Test that DNSSection insists on receiving proper arguments"""
+	"""Test that DNSRecord insists on receiving proper arguments"""
 	self.assertRaises(TypeError, Constrict.DNSRecord, 'too few arguments')
 	self.assertRaises(TypeError, Constrict.DNSRecord, 'also not', 'enough')
 	self.assertRaises(TypeError, Constrict.DNSRecord, "now", "there's", "too", "many")
@@ -188,6 +213,7 @@ def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
     s.addTest( unittest.makeSuite(testDNSFlags  , 'test') )
+    s.addTest( unittest.makeSuite(testDNSSection, 'test') )
     s.addTest( unittest.makeSuite(testDNSRecord , 'test') )
     return s
 
