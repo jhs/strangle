@@ -308,7 +308,7 @@ libbind_ns_rr_type(PyObject *self, PyObject *args)
 }
 
 static char libbind_ns_rr_class_doc[] =
-"Returns the network class (inet or chaos) of an ns_rr record";
+"Returns the network class of an ns_rr record (usually ns_c_in for Internet)";
 
 static PyObject *
 libbind_ns_rr_class(PyObject *self, PyObject *args)
