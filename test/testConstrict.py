@@ -225,15 +225,16 @@ class testDNSRecord(unittest.TestCase):
 	self.msgFileName = "data/www.microsoft.com-response"
 	self.msg         = libbind.ns_msg( file(self.msgFileName).read() )
 
-    def testDetectsBadType(self):
+    def testDetectsBadArgs(self):
 	"""Test that DNSRecord insists on receiving proper arguments"""
 	self.assertRaises(TypeError, Constrict.DNSRecord, 'too few arguments')
 	self.assertRaises(TypeError, Constrict.DNSRecord, 'also not', 'enough')
 	self.assertRaises(TypeError, Constrict.DNSRecord, "now", "there's", "too", "many")
 
 	self.assertRaises(Constrict.DNSRecordError, Constrict.DNSRecord, "the", "wrong", "type")
+	self.assertRaises(Constrict.DNSRecordError, Constrict.DNSRecord, self.msg, 'query', 5)
 
-	rec = Constrict.DNSRecord(self.msg, 'query', 0)
+	rec = Constrict.DNSRecord(self.msg, 'question', 0)
 	assert(type(rec) is Constrict.DNSRecord)
 
 def suite():

@@ -152,10 +152,10 @@ class DNSSection(object):
     def __init__(self, msg, *args, **kwargs):
 	"""Initialize a message section"""
 
-	self.mapping = { 'question'   : 'ns_s_qd',
-			 'answer'     : 'ns_s_an',
-			 'authority'  : 'ns_s_ns',
-			 'additional' : 'ns_s_ar',
+	self.mapping = { 'question'   : libbind.ns_s_qd,
+			 'answer'     : libbind.ns_s_an,
+			 'authority'  : libbind.ns_s_ns,
+			 'additional' : libbind.ns_s_ar,
 		       }
 
 	if type(msg) is not libbind.ns_msg:
@@ -172,7 +172,7 @@ class DNSSection(object):
 	if sectionName not in self.mapping.keys():
 	    raise DNSSectionError, "DNSSection requires a valid section name"
 
-	section = getattr(libbind, self.mapping[sectionName])
+	section = self.mapping[sectionName]
 	totalRecords = libbind.ns_msg_count(msg, section)
 	if totalRecords < 1:
 	    raise DNSSectionError, "No such section in this message"
@@ -218,10 +218,25 @@ class DNSRecord(object):
 	data       - The value of the record
     """
 
-    def __init__(self, msg, sectName, recordNum):
+    def __init__(self, msg, sectionName, recordNum):
 	"""Fills in all record values to the object members"""
 
 	if type(msg) is not libbind.ns_msg:
 	    raise DNSRecordError, "DNSRecord initialized but without an ns_msg"
+	
+	self.mapping = { 'question'   : libbind.ns_s_qd,
+			 'answer'     : libbind.ns_s_an,
+			 'authority'  : libbind.ns_s_ns,
+			 'additional' : libbind.ns_s_ar,
+		       }
+
+	if sectionName not in self.mapping.keys():
+	    raise DNSRecordError, "DNSRecord requires a valid section name"
+
+	section = self.mapping[sectionName]
+	try:
+	    self.rr = libbind.ns_rr(msg, section, recordNum)
+	except TypeError:
+	    raise DNSRecordError, 'The section "%"s does not have this record, %d' % (sectionName, recordNum)
 
 # vim: sts=4 sw=4 noet
