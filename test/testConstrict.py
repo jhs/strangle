@@ -313,6 +313,25 @@ class testDNSRecord(unittest.TestCase):
 	rr = Constrict.DNSRecord(self.msg, 'authority', 2)
 	self.assertEquals(rr.queryClass, 'IN')
 
+    def testHasType(self):
+	"""Test whether DNSRecord has the proper query type member"""
+	from Constrict import DNSRecord
+
+	# This one has more interesting TTLs
+	msg = Constrict.libbind.ns_msg(file('data/oreilly.com-response').read())
+
+	rr = DNSRecord(msg, 'question', 0)
+	self.assertEquals(rr.type, 'MX')
+
+	rr = DNSRecord(msg, 'answer', 0)
+	self.assertEquals(rr.type, 'MX')
+
+	rr = DNSRecord(msg, 'authority', 1)
+	self.assertEquals(rr.type, 'NS')
+
+	rr = DNSRecord(msg, 'additional', 3)
+	self.assertEquals(rr.type, 'A')
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )

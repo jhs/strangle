@@ -205,14 +205,14 @@ class DNSSection(object):
 	for record in self.records:
 	    info.append(record.__str__())
 	
-	return "\n".join(info)
+	return "\n".join(info) + "\n"
 
 class DNSRecord(object):
     """An individual record from a DNS message
 
     DNSRecord objects contain the following members:
 	name       - Host name
-	type       - Query type ('A', 'NS', 'CNAME', etc.)
+	type       - Query type ('A', 'NS', 'CNAME', etc. or 'Unknown')
 	queryClass - Network class ('IN', 'Unknown')
 	ttl        - Time to live for the data in the record
 	data       - The value of the record
@@ -247,8 +247,34 @@ class DNSRecord(object):
 	    self.queryClass = 'IN'
 	else:
 	    self.queryClass = 'Unknown'
+	
+	self.type = libbind.ns_rr_type(self.rr)
+	typeDict = { libbind.ns_t_a     : 'A',
+		     libbind.ns_t_ns    : 'NS',
+		     libbind.ns_t_cname : 'CNAME',
+		     libbind.ns_t_soa   : 'SOA',
+		     libbind.ns_t_null  : 'NULL',
+		     libbind.ns_t_ptr   : 'PTR',
+		     libbind.ns_t_hinfo : 'HINFO',
+		     libbind.ns_t_mx    : 'MX',
+		     libbind.ns_t_txt   : 'TXT',
+		     libbind.ns_t_sig   : 'SIG',
+		     libbind.ns_t_key   : 'KEY',
+		     libbind.ns_t_aaaa  : 'AAAA',
+		     libbind.ns_t_loc   : 'LOC',
+		     libbind.ns_t_srv   : 'SRV',
+		     libbind.ns_t_tsig  : 'TSIG',
+		     libbind.ns_t_ixfr  : 'IXFR',
+		     libbind.ns_t_axfr  : 'AXFR',
+		     libbind.ns_t_any   : 'ANY',
+		     libbind.ns_t_zxfr  : 'ZXFR',
+		   }
+	try:
+	    self.type = typeDict[self.type]
+	except KeyError:
+	    self.type = 'Unknown'
 
     def __str__(self):
-	return "%-23s %-7d %-7s" % (self.name, self.ttl, self.queryClass)
+	return "%-23s %-7d %-7s %-7s" % (self.name, self.ttl, self.queryClass, self.type)
 
 # vim: sts=4 sw=4 noet
