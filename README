@@ -21,9 +21,6 @@ as well as standard C development packages (gcc, libc6-dev, etc.)
 3. Everything should compile properly and you should be able to use the
    Constrict library from any location in your system.
 
-3. Everything should compile properly and you should be able to use the
-   Constrict library from any location in your system.
-
    >>> import Constrict
    >>> Constrict
    <module 'Constrict' from '.../site-packages/Constrict/__init__.pyc'>
