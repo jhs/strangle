@@ -359,6 +359,32 @@ libbind_ns_rr_ttl(PyObject *self, PyObject *args)
     return PyInt_FromLong((long)ttl);
 }
 
+static char libbind_ns_rr_rdlen_doc[] =
+"Returns the length of the record data in an ns_rr object";
+
+static PyObject *
+libbind_ns_rr_rdlen(PyObject *self, PyObject *args)
+{
+    PyObject *rr;
+    u_int16_t length;
+
+    PyTypeObject *argType;
+    char         *argTypeStr;
+
+    if( !PyArg_ParseTuple(args, "O", &rr) )
+	return NULL;
+
+    argType    = (PyTypeObject *)(rr->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
+	return NULL;
+    }
+
+    length = ns_rr_rdlen(((libbind_ns_rr *)rr)->record);
+    return PyInt_FromLong((long)length);
+}
+
 static PyMethodDef libbind_methods[] = {
     {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
@@ -368,6 +394,7 @@ static PyMethodDef libbind_methods[] = {
     {"ns_rr_type"    , libbind_ns_rr_type    , METH_VARARGS, libbind_ns_rr_type_doc},
     {"ns_rr_class"   , libbind_ns_rr_class   , METH_VARARGS, libbind_ns_rr_class_doc},
     {"ns_rr_ttl"     , libbind_ns_rr_ttl     , METH_VARARGS, libbind_ns_rr_ttl_doc},
+    {"ns_rr_rdlen"   , libbind_ns_rr_rdlen   , METH_VARARGS, libbind_ns_rr_rdlen_doc},
     {NULL, NULL}
 };
 

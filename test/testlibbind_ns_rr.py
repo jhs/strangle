@@ -167,6 +167,39 @@ class ns_rrTestCase(unittest.TestCase):
 	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
 	assert(libbind.ns_rr_ttl(rr) == 0x7f19)
 
+    def testReturnsRdlen(self):
+	"""Test whether ns_rr_rdlen returns the correct data length"""
+
+	# Query
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_qd, 0)
+	assert(libbind.ns_rr_rdlen(rr) == 0)
+
+	# Answer
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 0)
+	assert(libbind.ns_rr_rdlen(rr) == 0x0a)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 1)
+	assert(libbind.ns_rr_rdlen(rr) == 0x0a)
+
+	# Name servers
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 0)
+	assert(libbind.ns_rr_rdlen(rr) == 0x0f)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 1)
+	assert(libbind.ns_rr_rdlen(rr) == 0x06)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 2)
+	assert(libbind.ns_rr_rdlen(rr) == 0x05)
+
+	# Additional
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 0)
+	assert(libbind.ns_rr_rdlen(rr) == 4)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 1)
+	assert(libbind.ns_rr_rdlen(rr) == 4)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 2)
+	assert(libbind.ns_rr_rdlen(rr) == 4)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 3)
+	assert(libbind.ns_rr_rdlen(rr) == 4)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
+	assert(libbind.ns_rr_rdlen(rr) == 4)
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(ns_rrTestCase, 'test') )
