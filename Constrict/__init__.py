@@ -68,10 +68,17 @@ class DNSMessage(object):
 
 	info.append("ID     : %d" % self.id)
 	info.append(self.flags.__str__())
-	for section in self.sections.values():
-	    info.append(section.__str__())
+	sections = self.sections.keys()
+	sections.sort(self.sectionSorter)
+	for section in sections:
+	    info.append(self.sections[section].__str__())
 	
 	return "\n".join(info)
+
+    def sectionSorter(self, a, b):
+	"""A comparison function for sort routines to output sections in the right order"""
+	order = [ 'question', 'answer', 'authority', 'additional' ]
+	return cmp(order.index(a), order.index(b))
 
 class DNSFlags(object):
     """Flags from a DNS message headers
@@ -188,6 +195,17 @@ class DNSSection(object):
 	except IndexError:
 	    raise DNSSectionError, "No such record"
 	return record
+
+    def __str__(self):
+	"""Printable output"""
+	import string
+
+	info = []
+	info.append(";; %s SECTION:" % string.upper(self.name))
+	for record in self.records:
+	    info.append(record.__str__())
+	
+	return "\n".join(info)
 
 class DNSRecord(object):
     """An individual record from a DNS message
