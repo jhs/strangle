@@ -19,6 +19,7 @@
 """An object-oriented library for comprehending DNS messages using BIND parsing"""
 
 import libbind
+import socket
 
 class ConstrictError(StandardError):
     """Error parsing DNS packet"""
@@ -215,7 +216,7 @@ class DNSRecord(object):
 	type       - Query type ('A', 'NS', 'CNAME', etc. or 'Unknown')
 	queryClass - Network class ('IN', 'Unknown')
 	ttl        - Time to live for the data in the record
-	data       - The value of the record
+	data       - The value of the record or None if not applicable
     """
 
     def __init__(self, msg, sectionName, recordNum):
@@ -273,8 +274,20 @@ class DNSRecord(object):
 	    self.type = typeDict[self.type]
 	except KeyError:
 	    self.type = 'Unknown'
+	
+	rdata = libbind.ns_rr_rdata(self.rr)
+	if rdata is None:
+	    # Query records look like this
+	    self.data = ""
+	else:
+	    if self.type == 'A':
+		self.data = socket.inet_ntoa(rdata)
+	    elif self.type in ('NS', 'CNAME', 'SOA', 'PTR', 'MX'):
+		self.data = libbind.ns_name_uncompress(msg, self.rr)
+	    else:
+		self.data = rdata
 
     def __str__(self):
-	return "%-23s %-7d %-7s %-7s" % (self.name, self.ttl, self.queryClass, self.type)
+	return "%-23s %-7d %-7s %-7s %s" % (self.name, self.ttl, self.queryClass, self.type, self.data)
 
 # vim: sts=4 sw=4 noet

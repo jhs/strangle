@@ -332,6 +332,43 @@ class testDNSRecord(unittest.TestCase):
 	rr = DNSRecord(msg, 'additional', 3)
 	self.assertEquals(rr.type, 'A')
 
+    def testHasData(self):
+	"""Test whether DNSRecord has the proper data member"""
+	from Constrict import DNSRecord
+
+	# This one has more interesting data
+	msg = Constrict.libbind.ns_msg(file('data/oreilly.com-response').read())
+
+	# Question
+	rr = DNSRecord(msg, 'question', 0)
+	self.assertEquals(rr.data, '')
+
+	# Answer
+	rr = DNSRecord(msg, 'answer', 0)
+	self.assertEquals(rr.data, 'smtp1.oreilly.com')
+	rr = DNSRecord(msg, 'answer', 1)
+	self.assertEquals(rr.data, 'smtp2.oreilly.com')
+
+	# Authority
+	rr = DNSRecord(msg, 'authority', 0)
+	self.assertEquals(rr.data, 'ns1.sonic.net')
+	rr = DNSRecord(msg, 'authority', 1)
+	self.assertEquals(rr.data, 'ns2.sonic.net')
+	rr = DNSRecord(msg, 'authority', 2)
+	self.assertEquals(rr.data, 'ns.oreilly.com')
+
+	# Additional
+	rr = DNSRecord(msg, 'additional', 0)
+	self.assertEquals(rr.data, '209.204.146.22')
+	rr = DNSRecord(msg, 'additional', 1)
+	self.assertEquals(rr.data, '209.58.173.22')
+	rr = DNSRecord(msg, 'additional', 2)
+	self.assertEquals(rr.data, '209.204.146.21')
+	rr = DNSRecord(msg, 'additional', 3)
+	self.assertEquals(rr.data, '208.201.224.11')
+	rr = DNSRecord(msg, 'additional', 4)
+	self.assertEquals(rr.data, '208.201.224.33')
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
