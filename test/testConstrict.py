@@ -95,50 +95,72 @@ class testDNSFlags(unittest.TestCase):
 
     def testDetectsQR(self):
 	"""Test whether DNSFlags detects whether the message is a query or response"""
+	from Constrict import libbind
+
 	for message in self.queries:
 	    messageText = message['data']
-	    msg = Constrict.DNSMessage(messageText)
-	    self.assertEquals(msg.flags.type, 'query')
+	    message = libbind.ns_msg(messageText)
+	    flags = Constrict.DNSFlags(message)
+	    self.assertEquals(flags.type, 'query')
 	for message in self.responses:
 	    messageText = message['data']
-	    msg = Constrict.DNSMessage(messageText)
-	    self.assertEquals(msg.flags.type, 'response')
+	    message = libbind.ns_msg(messageText)
+	    flags = Constrict.DNSFlags(message)
+	    self.assertEquals(flags.type, 'response')
     
     def testGetsOpcode(self):
 	"""Test whether DNSFlags determines the proper opcodes"""
+	from Constrict import libbind
+
 	for message in self.queries + self.responses:
-	    msg = Constrict.DNSMessage(message['data'])
-	    self.assertEquals(msg.flags.opcode, message['flags']['ns_f_opcode'])
+	    msg   = libbind.ns_msg(message['data'])
+	    flags = Constrict.DNSFlags(msg)
+	    self.assertEquals(flags.opcode, message['flags']['ns_f_opcode'])
 
     def testGetsAuthor(self):
 	"""Test whether DNSFlags determines whether the message is authoritative"""
+	from Constrict import libbind
+
 	for message in self.queries + self.responses:
-	    msg = Constrict.DNSMessage(message['data'])
-	    self.assertEquals(msg.flags.authoritative, message['flags']['ns_f_aa'])
+	    msg   = libbind.ns_msg(message['data'])
+	    flags = Constrict.DNSFlags(msg)
+	    self.assertEquals(flags.authoritative, message['flags']['ns_f_aa'])
 	
     def testGetsTrunc(self):
 	"""Test whether DNSFlags determines whether the message is truncated"""
+	from Constrict import libbind
+
 	for message in self.queries + self.responses:
-	    msg = Constrict.DNSMessage(message['data'])
-	    self.assertEquals(msg.flags.truncated, message['flags']['ns_f_tc'])
+	    msg   = libbind.ns_msg(message['data'])
+	    flags = Constrict.DNSFlags(msg)
+	    self.assertEquals(flags.truncated, message['flags']['ns_f_tc'])
 	
     def testGetsRD(self):
 	"""Test whether DNSFlags determines whether recursion is desired"""
+	from Constrict import libbind
+
 	for message in self.queries + self.responses:
-	    msg = Constrict.DNSMessage(message['data'])
-	    self.assertEquals(msg.flags.recursionDesired, message['flags']['ns_f_rd'])
+	    msg   = libbind.ns_msg(message['data'])
+	    flags = Constrict.DNSFlags(msg)
+	    self.assertEquals(flags.recursionDesired, message['flags']['ns_f_rd'])
 	
     def testGetsRA(self):
 	"""Test whether DNSFlags determines whether recursion is available"""
+	from Constrict import libbind
+
 	for message in self.queries + self.responses:
-	    msg = Constrict.DNSMessage(message['data'])
-	    self.assertEquals(msg.flags.recursionAvailable, message['flags']['ns_f_ra'])
+	    msg   = libbind.ns_msg(message['data'])
+	    flags = Constrict.DNSFlags(msg)
+	    self.assertEquals(flags.recursionAvailable, message['flags']['ns_f_ra'])
 	
     def testGetsResponse(self):
 	"""Test whether DNSFlags determines the correct response code"""
+	from Constrict import libbind
+
 	for message in self.queries + self.responses:
-	    msg = Constrict.DNSMessage(message['data'])
-	    self.assertEquals(msg.flags.response, message['flags']['ns_f_rcode'])
+	    msg   = libbind.ns_msg(message['data'])
+	    flags = Constrict.DNSFlags(msg)
+	    self.assertEquals(flags.response, message['flags']['ns_f_rcode'])
 
 class testDNSRecord(unittest.TestCase):
     """Tests all interfaces to the DNSsection object"""
