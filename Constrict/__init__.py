@@ -95,6 +95,11 @@ class DNSFlags(object):
 	    self.authoritative = True
 	else:
 	    self.authoritative = False
+	
+	if libbind.ns_msg_getflag(msg, libbind.ns_f_tc):
+	    self.truncated = True
+	else:
+	    self.truncated = False
     
 # TODO
 class DNSSection(object):

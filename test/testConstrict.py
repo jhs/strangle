@@ -116,6 +116,12 @@ class testDNSFlags(unittest.TestCase):
 	    msg = Constrict.DNSMessage(message['data'])
 	    self.assertEquals(msg.flags.authoritative, message['flags']['ns_f_aa'])
 	
+    def testGetsTrunc(self):
+	"""Test whether DNSFlags determines whether the message is truncated"""
+	for message in self.queries + self.responses:
+	    msg = Constrict.DNSMessage(message['data'])
+	    self.assertEquals(msg.flags.truncated, message['flags']['ns_f_tc'])
+	
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
