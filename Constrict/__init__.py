@@ -181,6 +181,14 @@ class DNSSection(object):
 	self.records.append(record)
 	return self.records[-1] is record
 
+    def getRecord(self, recordNum):
+	"""Fetch a DNSRecord from the section"""
+	try:
+	    record = self.records[recordNum]
+	except IndexError:
+	    raise DNSSectionError, "No such record"
+	return record
+
 class DNSRecord(object):
     """An individual record from a DNS message
 
