@@ -240,10 +240,9 @@ class DNSRecord(object):
 	    raise DNSRecordError, 'The section "%"s does not have this record, %d' % (sectionName, recordNum)
 	
 	self.name = libbind.ns_rr_name(self.rr)
-
 	self.ttl = libbind.ns_rr_ttl(self.rr)
 
     def __str__(self):
-	return "%-23s" % (self.name,)
+	return "%-23s %-7d" % (self.name, self.ttl)
 
 # vim: sts=4 sw=4 noet
