@@ -32,13 +32,35 @@ class libbindTestCase(unittest.TestCase):
 	# Values taken from ethereal and hex dump
 	self.queries   = [
 	    dict(id = 0xf2eb,
-		 type = 'query',
+		 flags = dict(ns_f_qr     = 0,	    # query
+			      ns_f_opcode = 0,	    # standard query
+			      ns_f_aa     = 0,	    # not authoritative
+			      ns_f_tc	  = 0,	    # not truncated
+			      ns_f_rd     = 1,	    # recursion desired
+			      ns_f_ra	  = 0,	    # recursion not available
+			      ns_f_z	  = 0,	    # reserved
+			      ns_f_ad	  = 0,	    # dnssec authenticated
+			      ns_f_cd     = 0,	    # dnssec checking disabled
+			      ns_f_rcode  = 0,	    # no error
+			      ns_f_max    = 0,
+			     ),
 		 record = 'a',
 		 host = 'www.company.example',
 		 data = file(os.path.join('data', 'www.company.example-query')).read(),
 		),
 	    dict(id = 0xb7f8,
-		 type = 'query',
+		 flags = dict(ns_f_qr     = 0,	    # query
+			      ns_f_opcode = 0,	    # standard query
+			      ns_f_aa     = 0,	    # not authoritative
+			      ns_f_tc	  = 0,	    # not truncated
+			      ns_f_rd     = 1,	    # recursion desired
+			      ns_f_ra	  = 0,	    # recursion not available
+			      ns_f_z	  = 0,	    # reserved
+			      ns_f_ad	  = 0,	    # dnssec authenticated
+			      ns_f_cd     = 0,	    # dnssec checking disabled
+			      ns_f_rcode  = 0,	    # no error
+			      ns_f_max    = 0,
+			     ),
 		 record = 'a',
 		 host = 'www.microsoft.com.nsatc.net',
 		 data = file(os.path.join('data', 'www.microsoft.com-query')).read(),
@@ -47,13 +69,35 @@ class libbindTestCase(unittest.TestCase):
 
 	self.responses = [
 	    dict(id = 0xf2eb,
-		 type = 'response',
+		 flags = dict(ns_f_qr     = 1,	    # response
+			      ns_f_opcode = 0,	    # standard query
+			      ns_f_aa     = 1,	    # authoritative
+			      ns_f_tc	  = 0,	    # not truncated
+			      ns_f_rd     = 1,	    # recursion desired
+			      ns_f_ra	  = 1,	    # recursion available
+			      ns_f_z	  = 0,	    # reserved
+			      ns_f_ad	  = 0,	    # dnssec authenticated
+			      ns_f_cd     = 0,	    # dnssec checking disabled
+			      ns_f_rcode  = 0,	    # no error
+			      ns_f_max    = 0,
+			     ),
 		 record = 'a',
 		 host = 'www.company.example',
 		 data = file(os.path.join('data', 'www.company.example-response')).read(),
 		),
 	    dict(id = 0xb7f8,
-		 type = 'response',
+		 flags = dict(ns_f_qr     = 1,	    # response
+			      ns_f_opcode = 0,	    # query
+			      ns_f_aa     = 1,	    # authoritative
+			      ns_f_tc	  = 0,	    # not truncated
+			      ns_f_rd     = 0,	    # recursion desired
+			      ns_f_ra	  = 0,	    # recursion not available
+			      ns_f_z	  = 0,	    # reserved
+			      ns_f_ad	  = 0,	    # dnssec authenticated
+			      ns_f_cd     = 0,	    # dnssec checking disabled
+			      ns_f_rcode  = 0,	    # no error
+			      ns_f_max    = 0,
+			     ),
 		 record = 'a',
 		 host = 'www.microsoft.com.nsatc.net',
 		 data = file(os.path.join('data', 'www.microsoft.com-response')).read(),
@@ -63,14 +107,31 @@ class libbindTestCase(unittest.TestCase):
 	assert(self.queries)
 	assert(self.responses)
 
+	self.flags = ['qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'ad', 'cd', 'rcode', 'max']
+	self.flags = map(lambda str: 'ns_f_' + str, self.flags)
+
     def testlibbindHasEnums(self):
 	"""Test whether libbind correctly defines all header flags"""
-	flags = ['qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'ad', 'cd', 'rcode', 'max']
-	for flag in flags:
-	    assert(getattr(libbind, 'ns_f_' + flag, None) is not None)
+	for flag in self.flags:
+	    assert(getattr(libbind, flag, None) is not None)
 	
-    def testlibbind_ns_msg_get_flag(self):
+    def testlibbind_ns_msg_getflagArgs(self):
+	"""Test whether ns_msg_getflags accepts the proper arguments"""
+	self.assertRaises(TypeError, libbind.ns_msg_getflag)
+
+	msg = libbind.ns_msg(self.queries[0]['data'])
+	self.assertRaises(TypeError, libbind.ns_msg_getflag, msg)
+
+	self.assertRaises(TypeError, libbind.ns_msg_getflag, msg, 'not an int')
+
+    def testlibbind_ns_msg_getflag(self):
 	"""Test whether libbind correctly returns the message flags"""
+	for message in self.queries + self.responses:
+	    msg = libbind.ns_msg(message['data'])
+	    for flag in self.flags:
+		flagVal = getattr(libbind, flag)
+		self.assertEquals(libbind.ns_msg_getflag(msg, flagVal), message['flags'][flag])
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(libbindTestCase, 'test') )

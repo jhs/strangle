@@ -113,7 +113,7 @@ libbind_ns_msg_id(PyObject *self, PyObject *args)
     messageType    = (PyTypeObject *)(message->ob_type);
     messageTypeStr = messageType->tp_name;
     if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
-	PyErr_SetString(PyExc_TypeError, "Argument must be a raw DNS message");
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return NULL;
     }
 
@@ -121,8 +121,36 @@ libbind_ns_msg_id(PyObject *self, PyObject *args)
     return Py_BuildValue("i", id);
 }
 
+static char libbind_ns_msg_getflag_doc[] =
+"Returns the requested flag field from an ns_msg object";
+
+static PyObject *
+libbind_ns_msg_getflag(PyObject *self, PyObject *args)
+{
+    PyObject *message;
+    int flag;
+    u_int16_t flagVal;
+
+    PyTypeObject *messageType;
+    char         *messageTypeStr;
+
+    if( !PyArg_ParseTuple(args, "Oi", &message, &flag) )
+	return NULL;
+
+    messageType    = (PyTypeObject *)(message->ob_type);
+    messageTypeStr = messageType->tp_name;
+    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
+	return NULL;
+    }
+
+    flagVal = ns_msg_getflag(((libbind_ns_msg *)message)->packet, flag);
+    return Py_BuildValue("i", (int)flagVal);
+}
+
 static PyMethodDef libbind_methods[] = {
-    {"ns_msg_id", libbind_ns_msg_id, METH_VARARGS, libbind_ns_msg_id_doc},
+    {"ns_msg_id"      , libbind_ns_msg_id      , METH_VARARGS, libbind_ns_msg_id_doc},
+    {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
     {NULL, NULL}
 };
 
