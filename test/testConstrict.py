@@ -243,32 +243,68 @@ class testDNSRecord(unittest.TestCase):
 
 	# Question
 	rr = DNSRecord(self.msg, 'question', 0)
-	assert rr.name == 'www.microsoft.com.nsatc.net'
+	self.assertEquals(rr.name, 'www.microsoft.com.nsatc.net')
 
 	# Answer
 	rr = DNSRecord(self.msg, 'answer', 0)
-	assert rr.name == 'www.microsoft.com.nsatc.net'
+	self.assertEquals(rr.name, 'www.microsoft.com.nsatc.net')
 
 	# Authority
 	rr = DNSRecord(self.msg, 'authority', 0)
-	assert rr.name == 'nsatc.net'
+	self.assertEquals(rr.name, 'nsatc.net')
 	rr = DNSRecord(self.msg, 'authority', 1)
-	assert rr.name == 'nsatc.net'
+	self.assertEquals(rr.name, 'nsatc.net')
 	rr = DNSRecord(self.msg, 'authority', 2)
-	assert rr.name == 'nsatc.net'
+	self.assertEquals(rr.name, 'nsatc.net')
 	rr = DNSRecord(self.msg, 'authority', 3)
-	assert rr.name == 'nsatc.net'
+	self.assertEquals(rr.name, 'nsatc.net')
 
 	# Additional
 	rr = DNSRecord(self.msg, 'additional', 0)
-	assert rr.name == 'j.ns.nsatc.net'
+	self.assertEquals(rr.name, 'j.ns.nsatc.net')
 	rr = DNSRecord(self.msg, 'additional', 1)
-	assert rr.name == 'k.ns.nsatc.net'
+	self.assertEquals(rr.name, 'k.ns.nsatc.net')
 	rr = DNSRecord(self.msg, 'additional', 2)
-	assert rr.name == 'us-ca-6.ns.nsatc.net'
+	self.assertEquals(rr.name, 'us-ca-6.ns.nsatc.net')
 	rr = DNSRecord(self.msg, 'additional', 3)
-	assert rr.name == 'l.ns.nsatc.net'
+	self.assertEquals(rr.name, 'l.ns.nsatc.net')
 
+    def testHasTTL(self):
+	"""Test whether DNSRecord has the proper ttl member"""
+	from Constrict import DNSRecord
+
+	# This one has more interesting TTLs
+	msg = Constrict.libbind.ns_msg(file('data/oreilly.com-response').read())
+
+	# Question
+	rr = DNSRecord(msg, 'question', 0)
+	self.assertEquals(rr.ttl, 0)
+
+	# Answer
+	rr = DNSRecord(msg, 'answer', 0)
+	self.assertEquals(rr.ttl, 3600)
+	rr = DNSRecord(msg, 'answer', 1)
+	self.assertEquals(rr.ttl, 3600)
+
+	# Authority
+	rr = DNSRecord(msg, 'authority', 0)
+	self.assertEquals(rr.ttl, 21600)
+	rr = DNSRecord(msg, 'authority', 1)
+	self.assertEquals(rr.ttl, 21600)
+	rr = DNSRecord(msg, 'authority', 2)
+	self.assertEquals(rr.ttl, 21600)
+
+	# Additional
+	rr = DNSRecord(msg, 'additional', 0)
+	self.assertEquals(rr.ttl, 21600)
+	rr = DNSRecord(msg, 'additional', 1)
+	self.assertEquals(rr.ttl, 21600)
+	rr = DNSRecord(msg, 'additional', 2)
+	self.assertEquals(rr.ttl, 21600)
+	rr = DNSRecord(msg, 'additional', 3)
+	self.assertEquals(rr.ttl, 32537)
+	rr = DNSRecord(msg, 'additional', 4)
+	self.assertEquals(rr.ttl, 32537)
 
 def suite():
     s = unittest.TestSuite()

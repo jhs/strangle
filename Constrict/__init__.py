@@ -241,6 +241,8 @@ class DNSRecord(object):
 	
 	self.name = libbind.ns_rr_name(self.rr)
 
+	self.ttl = libbind.ns_rr_ttl(self.rr)
+
     def __str__(self):
 	return "%-23s" % (self.name,)
 
