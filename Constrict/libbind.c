@@ -28,22 +28,6 @@
 static char libbind_doc[] = 
 "This module is a thin wrapper around the libbind parsing routines.";
 
-static char libbind_ns_msg_id_doc[] =
-"Returns the DNS message unique ID";
-
-static PyObject *
-libbind_ns_msg_id(PyObject *self, PyObject *args)
-{
-    unsigned id = 23;	/* TODO */
-
-    return Py_BuildValue("i", id);
-}
-
-static PyMethodDef libbind_methods[] = {
-    {"ns_msg_id", libbind_ns_msg_id, METH_VARARGS, libbind_ns_msg_id_doc},
-    {NULL, NULL}
-};
-
 static char libbind_ns_msg_doc[] =
 "This is a Python type that wraps the libbind ns_msg structure.  It is useful\n\
 with the other libbind functions";
@@ -52,6 +36,25 @@ typedef struct {
     PyObject_HEAD
     ns_msg packet;
 } libbind_ns_msg;
+
+/* __init__() */
+static int
+libbind_ns_msg_init(libbind_ns_msg *self, PyObject *args)
+{
+    char *packetData;
+    int  packetLength, result;
+
+    if( !PyArg_ParseTuple(args, "s#", &packetData, &packetLength) )
+	return -1;
+
+    result = ns_initparse(packetData, packetLength, &(self->packet));
+    if( result != 0 ) {
+	PyErr_SetString(PyExc_StandardError, "BIND cannot parse this packet");
+	return -1;
+    }
+
+    return 0;
+}
 
 static PyTypeObject libbind_ns_msgType = {
     PyObject_HEAD_INIT(NULL)
@@ -76,6 +79,51 @@ static PyTypeObject libbind_ns_msgType = {
     0,						/* tp_as_buffer */
     Py_TPFLAGS_DEFAULT,				/* tp_flags */
     libbind_ns_msg_doc,				/* tp_doc */
+    0,						/* tp_traverse       */
+    0,						/* tp_clear          */
+    0,						/* tp_richcompare    */
+    0,						/* tp_weaklistoffset */
+    0,						/* tp_iter           */
+    0,						/* tp_iternext       */
+    0,						/* tp_methods        */
+    0,						/* tp_members        */
+    0,						/* tp_getset         */
+    0,						/* tp_base           */
+    0,						/* tp_dict           */
+    0,						/* tp_descr_get      */
+    0,						/* tp_descr_set      */
+    0,						/* tp_dictoffset     */
+    (initproc)libbind_ns_msg_init,		/* tp_init           */
+};
+
+static char libbind_ns_msg_id_doc[] =
+"Returns the DNS message unique ID";
+
+static PyObject *
+libbind_ns_msg_id(PyObject *self, PyObject *args)
+{
+    unsigned id;
+    PyObject *message;
+    PyTypeObject *messageType;
+    char         *messageTypeStr;
+
+    if( !PyArg_ParseTuple(args, "O", &message) )
+	return NULL;
+
+    messageType    = (PyTypeObject *)(message->ob_type);
+    messageTypeStr = messageType->tp_name;
+    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a raw DNS message");
+	return NULL;
+    }
+
+    id = ns_msg_id( ((libbind_ns_msg *)message)->packet );
+    return Py_BuildValue("i", id);
+}
+
+static PyMethodDef libbind_methods[] = {
+    {"ns_msg_id", libbind_ns_msg_id, METH_VARARGS, libbind_ns_msg_id_doc},
+    {NULL, NULL}
 };
 
 /* Initialize the extension. */
