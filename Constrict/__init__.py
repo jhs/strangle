@@ -20,6 +20,7 @@
 
 import libbind
 import socket
+import struct
 
 class ConstrictError(StandardError):
     """Error parsing DNS packet"""
@@ -282,8 +283,11 @@ class DNSRecord(object):
 	else:
 	    if self.type == 'A':
 		self.data = socket.inet_ntoa(rdata)
-	    elif self.type in ('NS', 'CNAME', 'SOA', 'PTR', 'MX'):
+	    elif self.type in ('NS', 'CNAME', 'SOA', 'PTR'):
 		self.data = libbind.ns_name_uncompress(msg, self.rr)
+	    elif self.type == 'MX':
+		preference = struct.unpack('!H', rdata[0:2])[0]
+		self.data = "%d %s" % (preference, libbind.ns_name_uncompress(msg, self.rr))
 	    else:
 		self.data = rdata
 
