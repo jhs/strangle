@@ -288,7 +288,7 @@ static PyObject *
 libbind_ns_rr_type(PyObject *self, PyObject *args)
 {
     PyObject *rr;
-    uint16_t type;
+    u_int16_t type;
 
     PyTypeObject *argType;
     char         *argTypeStr;
@@ -314,7 +314,7 @@ static PyObject *
 libbind_ns_rr_class(PyObject *self, PyObject *args)
 {
     PyObject *rr;
-    uint16_t class;
+    u_int16_t class;
 
     PyTypeObject *argType;
     char         *argTypeStr;
@@ -340,7 +340,7 @@ static PyObject *
 libbind_ns_rr_ttl(PyObject *self, PyObject *args)
 {
     PyObject *rr;
-    uint32_t ttl;
+    u_int32_t ttl;
 
     PyTypeObject *argType;
     char         *argTypeStr;
