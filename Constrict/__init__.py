@@ -239,10 +239,16 @@ class DNSRecord(object):
 	except TypeError:
 	    raise DNSRecordError, 'The section "%"s does not have this record, %d' % (sectionName, recordNum)
 	
-	self.name = libbind.ns_rr_name(self.rr)
-	self.ttl = libbind.ns_rr_ttl(self.rr)
+	self.name       = libbind.ns_rr_name(self.rr)
+	self.ttl        = libbind.ns_rr_ttl(self.rr)
+
+	self.queryClass = libbind.ns_rr_class(self.rr)
+	if self.queryClass == libbind.ns_c_in:
+	    self.queryClass = 'IN'
+	else:
+	    self.queryClass = 'Unknown'
 
     def __str__(self):
-	return "%-23s %-7d" % (self.name, self.ttl)
+	return "%-23s %-7d %-7s" % (self.name, self.ttl, self.queryClass)
 
 # vim: sts=4 sw=4 noet

@@ -306,6 +306,13 @@ class testDNSRecord(unittest.TestCase):
 	rr = DNSRecord(msg, 'additional', 4)
 	self.assertEquals(rr.ttl, 32537)
 
+    def testHasClass(self):
+	"""Test whether DNSRecord has the proper network class member"""
+
+	# Only tested for IN class, Chaosnet and Hesiod will have to wait.
+	rr = Constrict.DNSRecord(self.msg, 'authority', 2)
+	self.assertEquals(rr.queryClass, 'IN')
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
