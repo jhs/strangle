@@ -75,6 +75,28 @@ class libbindTestCase(unittest.TestCase):
 		 host = 'www.microsoft.com.nsatc.net',
 		 data = file(os.path.join('data', 'www.microsoft.com-query')).read(),
 		),
+	    dict(id = 0xb2b9,
+		 flags = dict(ns_f_qr     = 0,	    # query
+			      ns_f_opcode = 0,	    # standard query
+			      ns_f_aa     = 0,	    # not authoritative
+			      ns_f_tc	  = 0,	    # not truncated
+			      ns_f_rd     = 1,	    # recursion desired
+			      ns_f_ra	  = 0,	    # recursion not available
+			      ns_f_z	  = 0,	    # reserved
+			      ns_f_ad	  = 0,	    # dnssec authenticated
+			      ns_f_cd     = 0,	    # dnssec checking disabled
+			      ns_f_rcode  = 0,	    # no error
+			      ns_f_max    = 0,
+			     ),
+		 sections = dict(ns_s_qd = 1,	    # queries
+				 ns_s_an = 0,	    # answers
+				 ns_s_ns = 0,	    # name server
+				 ns_s_ar = 0,	    # additional
+				),
+		 record = 'mx',
+		 host = 'oreilly.com',
+		 data = file(os.path.join('data', 'oreilly.com-query')).read(),
+		),
 	    ]
 
 	self.responses = [
@@ -121,6 +143,28 @@ class libbindTestCase(unittest.TestCase):
 		 record = 'a',
 		 host = 'www.microsoft.com.nsatc.net',
 		 data = file(os.path.join('data', 'www.microsoft.com-response')).read(),
+		),
+	    dict(id = 0xb2b9,
+		 flags = dict(ns_f_qr     = 1,	    # response
+			      ns_f_opcode = 0,	    # standard query
+			      ns_f_aa     = 1,	    # authoritative
+			      ns_f_tc	  = 0,	    # not truncated
+			      ns_f_rd     = 1,	    # recursion desired
+			      ns_f_ra	  = 1,	    # recursion available
+			      ns_f_z	  = 0,	    # reserved
+			      ns_f_ad	  = 0,	    # dnssec authenticated
+			      ns_f_cd     = 0,	    # dnssec checking disabled
+			      ns_f_rcode  = 0,	    # no error
+			      ns_f_max    = 0,
+			     ),
+		 sections = dict(ns_s_qd = 1,	    # queries
+				 ns_s_an = 2,	    # answers
+				 ns_s_ns = 3,	    # name server
+				 ns_s_ar = 5,	    # additional
+				),
+		 record = 'mx',
+		 host = 'oreilly.com',
+		 data = file(os.path.join('data', 'oreilly.com-response')).read(),
 		),
 	    ]
 
