@@ -127,6 +127,13 @@ class ns_rrTestCase(unittest.TestCase):
 	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
 	assert(libbind.ns_rr_type(rr) == libbind.ns_t_a)
 
+    def testReturnsClass(self):
+	"""Test whether ns_rr_type returns the correct class"""
+
+	# This is only tested for inet class.  Chaosnet and Hesiod users will just have to wait.
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 0)
+	assert(libbind.ns_rr_class(rr) == libbind.ns_c_in)
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(ns_rrTestCase, 'test') )

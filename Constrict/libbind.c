@@ -307,6 +307,32 @@ libbind_ns_rr_type(PyObject *self, PyObject *args)
     return PyInt_FromLong((long)type);
 }
 
+static char libbind_ns_rr_class_doc[] =
+"Returns the network class (inet or chaos) of an ns_rr record";
+
+static PyObject *
+libbind_ns_rr_class(PyObject *self, PyObject *args)
+{
+    PyObject *rr;
+    uint16_t class;
+
+    PyTypeObject *argType;
+    char         *argTypeStr;
+
+    if( !PyArg_ParseTuple(args, "O", &rr) )
+	return NULL;
+
+    argType    = (PyTypeObject *)(rr->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
+	return NULL;
+    }
+
+    class = ns_rr_class(((libbind_ns_rr *)rr)->record);
+    return PyInt_FromLong((long)class);
+}
+
 static PyMethodDef libbind_methods[] = {
     {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
@@ -314,6 +340,7 @@ static PyMethodDef libbind_methods[] = {
 
     {"ns_rr_name"    , libbind_ns_rr_name    , METH_VARARGS, libbind_ns_rr_name_doc},
     {"ns_rr_type"    , libbind_ns_rr_type    , METH_VARARGS, libbind_ns_rr_type_doc},
+    {"ns_rr_class"   , libbind_ns_rr_class   , METH_VARARGS, libbind_ns_rr_class_doc},
     {NULL, NULL}
 };
 
@@ -417,6 +444,16 @@ initlibbind(void)
     PyModule_AddObject(m, "ns_t_any", PyInt_FromLong(ns_t_any));
     PyModule_AddObject(m, "ns_t_zxfr", PyInt_FromLong(ns_t_zxfr));
     PyModule_AddObject(m, "ns_t_max", PyInt_FromLong(ns_t_max));
+
+    /* These are the ns_class enums.  We just use Python ints. */
+    PyModule_AddObject(m, "ns_c_invalid", PyInt_FromLong(ns_c_invalid));
+    PyModule_AddObject(m, "ns_c_in", PyInt_FromLong(ns_c_in));
+    PyModule_AddObject(m, "ns_c_2", PyInt_FromLong(ns_c_2));
+    PyModule_AddObject(m, "ns_c_chaos", PyInt_FromLong(ns_c_chaos));
+    PyModule_AddObject(m, "ns_c_hs", PyInt_FromLong(ns_c_hs));
+    PyModule_AddObject(m, "ns_c_none", PyInt_FromLong(ns_c_none));
+    PyModule_AddObject(m, "ns_c_any", PyInt_FromLong(ns_c_any));
+    PyModule_AddObject(m, "ns_c_max", PyInt_FromLong(ns_c_max));
 }
 
 // vim: sts=4 sw=4 noet
