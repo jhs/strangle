@@ -91,7 +91,7 @@ class DNSFlags(object):
     """Flags from a DNS message headers
 
     A DNSFlags object contains the following members:
-	type               - String ('query', 'response')
+	type               - String ('question', 'answer')
 	opcode             - Integer
 	authoritative      - Boolean
 	truncated          - Boolean
@@ -108,9 +108,9 @@ class DNSFlags(object):
 
 	isResponse = libbind.ns_msg_getflag(msg, libbind.ns_f_qr)
 	if isResponse:
-	    self.type = 'response'
+	    self.type = 'answer'
 	else:
-	    self.type = 'query'
+	    self.type = 'question'
 	
 	self.opcode = libbind.ns_msg_getflag(msg, libbind.ns_f_opcode)
 

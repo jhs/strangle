@@ -101,12 +101,12 @@ class testDNSFlags(unittest.TestCase):
 	    messageText = message['data']
 	    message = libbind.ns_msg(messageText)
 	    flags = Constrict.DNSFlags(message)
-	    self.assertEquals(flags.type, 'query')
+	    self.assertEquals(flags.type, 'question')
 	for message in self.responses:
 	    messageText = message['data']
 	    message = libbind.ns_msg(messageText)
 	    flags = Constrict.DNSFlags(message)
-	    self.assertEquals(flags.type, 'response')
+	    self.assertEquals(flags.type, 'answer')
     
     def testGetsOpcode(self):
 	"""Test whether DNSFlags determines the proper opcodes"""
