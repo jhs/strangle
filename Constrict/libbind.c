@@ -28,10 +28,32 @@
 #include <resolv.h>
 */
 
+static char libbind_doc[] = 
+"This module is a thin wrapper around the libbind parsing routines.";
+
+static char libbind_ns_msg_id_doc[] =
+"Returns the DNS message unique ID";
+
+static PyObject *
+libbind_ns_msg_id(PyObject *self, PyObject *args)
+{
+    unsigned id = 23;	/* TODO */
+
+    return Py_BuildValue("i", id);
+}
+
+static PyMethodDef libbind_methods[] = {
+    {"ns_msg_id", libbind_ns_msg_id, METH_VARARGS, libbind_ns_msg_id_doc},
+    {NULL, NULL}
+};
+
+/* Initialize the extension. */
 PyMODINIT_FUNC
 initlibbind(void)
 {
     PyObject *m;
 
-    m = Py_InitModule3("Constrict.libbind", NULL, "Interface to libbind parsing libraries");
+    m = Py_InitModule3("Constrict.libbind", libbind_methods, libbind_doc);
 }
+
+// vim: sts=4 sw=4 noet
