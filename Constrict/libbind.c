@@ -417,8 +417,10 @@ libbind_ns_rr_rdata(PyObject *self, PyObject *args)
      * This seems to be happening implicitly from Py_BuildValue but we do it
      * anyway for clarity.
      */
-    if( rdata == (const u_char *)NULL )
+    if( rdata == (const u_char *)NULL ) {
+	Py_INCREF(Py_None);
 	return Py_None;
+    }
 
     return Py_BuildValue("s#", rdata, length);
 }
@@ -519,8 +521,10 @@ libbind_ns_data_offset(PyObject *self, PyObject *args)
     dataLocation = ns_rr_rdata(rr->record);
 
     /* NULL data location means the record does not have data (e.g. for a query). */
-    if( dataLocation == (const u_char *)NULL )
+    if( dataLocation == (const u_char *)NULL ) {
+	Py_INCREF(Py_None);
 	return Py_None;
+    }
 
     offset = dataLocation - msgStart;
     return PyInt_FromLong(offset);

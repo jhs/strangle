@@ -260,6 +260,18 @@ class libbindTestCase(unittest.TestCase):
 	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
 	assert(libbind.ns_rr_rdata(rr) == ip2str('208.201.224.33'))
 
+    def testlibbind_ns_rr_rdataNone(self):
+	"""Test that ns_rr_rdata properly handles None's ref count"""
+
+	# There is no way to test this with assert.  We just run a bunch of times
+	# and if Python crashes, well, then we failed the test.
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_qd, 0)
+	for i in xrange(1, 10000):
+	    data = libbind.ns_rr_rdata(rr)
+	    del data
+	
+	assert True
+
     def testlibbind_ns_name_uncompress(self):
 	"""Test whether ns_name_uncompress returns the correct name"""
 	msg = libbind.ns_msg(self.responses[2]['data'])
@@ -301,6 +313,20 @@ class libbindTestCase(unittest.TestCase):
 	# Additional
 	rr = libbind.ns_rr(msg, libbind.ns_s_ar, 0)
 	self.assertEquals(libbind.ns_data_offset(msg, rr), 83)
+
+    def testlibbind_ns_data_offsetNone(self):
+	"""Test that ns_data_offset properly handles None's ref count"""
+
+	msg = libbind.ns_msg(self.responses[0]['data'])
+	rr  = libbind.ns_rr(msg, libbind.ns_s_qd, 0)
+
+	# There is no way to test this with assert.  We just run a bunch of times
+	# and if Python crashes, well, then we failed the test.
+	for i in xrange(1, 10000):
+	    data = libbind.ns_data_offset(msg, rr)
+	    del data
+	
+	assert True
 
 def suite():
     s = unittest.TestSuite()
