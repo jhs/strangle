@@ -213,6 +213,12 @@ class testDNSSection(unittest.TestCase):
 	rec = Constrict.DNSRecord(self.msg, 'authority', 2)
 	sect.addRecord(rec)
 	assert sect.getRecord(-1) is rec
+
+    def testHasNumRecords(self):
+	"""Test that DNSSection has a numRecords method"""
+	sect = Constrict.DNSSection(self.msg, section="authority")
+	assert callable(sect.numRecords)
+	self.assertEquals(sect.numRecords(), 3)
 	
 class testDNSRecord(unittest.TestCase):
     """Tests all interfaces to the DNSRecord object"""

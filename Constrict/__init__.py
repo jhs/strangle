@@ -190,6 +190,10 @@ class DNSSection(object):
 	for recordNum in range(0, totalRecords):
 	    self.addRecord(DNSRecord(msg, sectionName, recordNum))
 
+    def numRecords(self):
+	"""Return the number of records in this section"""
+	return len(self.records)
+
     def addRecord(self, record):
 	"""Add a DNSRecord to the section"""
 	self.records.append(record)
@@ -208,11 +212,11 @@ class DNSSection(object):
 	import string
 
 	info = []
-	info.append(";; %s SECTION:" % string.upper(self.name))
+	info.append("\n;; %s SECTION:" % string.upper(self.name))
 	for record in self.records:
 	    info.append(record.__str__())
 	
-	return "\n".join(info) + "\n"
+	return "\n".join(info)
 
 class DNSRecord(object):
     """An individual record from a DNS message
