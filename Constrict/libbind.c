@@ -182,7 +182,7 @@ static char libbind_ns_msg_id_doc[] =
 static PyObject *
 libbind_ns_msg_id(PyObject *self, PyObject *args)
 {
-    unsigned id;
+    u_int16_t id;
     PyObject *message;
     PyTypeObject *messageType;
     char         *messageTypeStr;
@@ -198,7 +198,7 @@ libbind_ns_msg_id(PyObject *self, PyObject *args)
     }
 
     id = ns_msg_id( ((libbind_ns_msg *)message)->packet );
-    return Py_BuildValue("i", id);
+    return PyInt_FromLong((long)id);
 }
 
 static char libbind_ns_msg_getflag_doc[] =
