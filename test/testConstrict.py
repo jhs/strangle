@@ -345,9 +345,9 @@ class testDNSRecord(unittest.TestCase):
 
 	# Answer
 	rr = DNSRecord(msg, 'answer', 0)
-	self.assertEquals(rr.data, 'smtp1.oreilly.com')
+	self.assertEquals(rr.data, '20 smtp1.oreilly.com')
 	rr = DNSRecord(msg, 'answer', 1)
-	self.assertEquals(rr.data, 'smtp2.oreilly.com')
+	self.assertEquals(rr.data, '20 smtp2.oreilly.com')
 
 	# Authority
 	rr = DNSRecord(msg, 'authority', 0)
