@@ -18,4 +18,60 @@
 
 """An object-oriented library for comprehending DNS messages using BIND parsing"""
 
+import libbind
+
+class ConstrictError(StandardError):
+    """Error parsing DNS packet"""
+
+class DNSMessage(object):
+    """A DNS message.  This is an easy-to-understand object-oriented
+    representation of standard DNS queries and responses, based on libbind.
+
+    A DNSMessage contains these members:
+    * id - a number representing the unique query ID
+    * flags - a DNSFlags object from the header flags
+    * sections - a dict of sections (usually "question", "authority", etc.)
+    """
+
+    def __init__(self, packetData):
+	"""Create a DNSMessage object from a string of the raw DNS message"""
+
+	# If packetData has a read() method, we use it as for a file.
+	if getattr(packetData, 'read', None) is not None:
+	    packetData = packetData.read()
+	
+	try:
+	    msg = libbind.ns_msg(packetData)
+	except TypeError:
+	    raise ConstrictError, "Failed to parse the packet"
+	
+	self.id       = libbind.ns_msg_id(msg)
+	self.flags    = DNSFlags(msg)
+	self.sections = {}
+
+	for sectionName in ('question', 'answer', 'authority', 'additional'):
+	    section = DNSSection(msg, section=sectionName)
+	    if section is not None:
+		self.sections[sectionName] = section
+    
+    def __str__(self):
+	info = []
+
+	info.append("ID: %d" % self.id)
+	info.append(self.flags.__str__())
+	for section in self.sections.values():
+	    info.append(section.__str__())
+	
+	return "\n".join(info)
+
+# TODO
+class DNSFlags(object):
+    def __init__(self, *args, **kwargs):
+	pass
+    
+# TODO
+class DNSSection(object):
+    def __init__(self, *args, **kwargs):
+	pass
+
 # vim: sts=4 sw=4 noet

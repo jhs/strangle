@@ -19,7 +19,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Should be imported for testing
-import sys
+import sys, os
 import random
 
 baseDir  = ".."
@@ -75,3 +75,142 @@ def someIPAddresses(quantity=500, useInvalid=True):
 	addressString = "%d.%d.%d.%d" % tuple(address)
 	# print "Made", (address, addressString, isValid)
 	yield address, addressString, isValid
+
+# Values taken from ethereal and hex dump
+queries   = [
+    dict(id = 0xf2eb,
+	 flags = dict(ns_f_qr     = 0,	    # query
+		      ns_f_opcode = 0,	    # standard query
+		      ns_f_aa     = 0,	    # not authoritative
+		      ns_f_tc	  = 0,	    # not truncated
+		      ns_f_rd     = 1,	    # recursion desired
+		      ns_f_ra	  = 0,	    # recursion not available
+		      ns_f_z	  = 0,	    # reserved
+		      ns_f_ad	  = 0,	    # dnssec authenticated
+		      ns_f_cd     = 0,	    # dnssec checking disabled
+		      ns_f_rcode  = 0,	    # no error
+		      ns_f_max    = 0,
+		     ),
+	 sections = dict(ns_s_qd = 1,	    # queries
+			 ns_s_an = 0,	    # answers
+			 ns_s_ns = 0,	    # name server
+			 ns_s_ar = 0,	    # additional
+			),
+	 record = 'a',
+	 host = 'www.company.example',
+	 data = file(os.path.join('data', 'www.company.example-query')).read(),
+	),
+    dict(id = 0xb7f8,
+	 flags = dict(ns_f_qr     = 0,	    # query
+		      ns_f_opcode = 0,	    # standard query
+		      ns_f_aa     = 0,	    # not authoritative
+		      ns_f_tc	  = 0,	    # not truncated
+		      ns_f_rd     = 1,	    # recursion desired
+		      ns_f_ra	  = 0,	    # recursion not available
+		      ns_f_z	  = 0,	    # reserved
+		      ns_f_ad	  = 0,	    # dnssec authenticated
+		      ns_f_cd     = 0,	    # dnssec checking disabled
+		      ns_f_rcode  = 0,	    # no error
+		      ns_f_max    = 0,
+		     ),
+	 sections = dict(ns_s_qd = 1,	    # queries
+			 ns_s_an = 0,	    # answers
+			 ns_s_ns = 0,	    # name server
+			 ns_s_ar = 0,	    # additional
+			),
+	 record = 'a',
+	 host = 'www.microsoft.com.nsatc.net',
+	 data = file(os.path.join('data', 'www.microsoft.com-query')).read(),
+	),
+    dict(id = 0xb2b9,
+	 flags = dict(ns_f_qr     = 0,	    # query
+		      ns_f_opcode = 0,	    # standard query
+		      ns_f_aa     = 0,	    # not authoritative
+		      ns_f_tc	  = 0,	    # not truncated
+		      ns_f_rd     = 1,	    # recursion desired
+		      ns_f_ra	  = 0,	    # recursion not available
+		      ns_f_z	  = 0,	    # reserved
+		      ns_f_ad	  = 0,	    # dnssec authenticated
+		      ns_f_cd     = 0,	    # dnssec checking disabled
+		      ns_f_rcode  = 0,	    # no error
+		      ns_f_max    = 0,
+		     ),
+	 sections = dict(ns_s_qd = 1,	    # queries
+			 ns_s_an = 0,	    # answers
+			 ns_s_ns = 0,	    # name server
+			 ns_s_ar = 0,	    # additional
+			),
+	 record = 'mx',
+	 host = 'oreilly.com',
+	 data = file(os.path.join('data', 'oreilly.com-query')).read(),
+	),
+    ]
+
+responses = [
+    dict(id = 0xf2eb,
+	 flags = dict(ns_f_qr     = 1,	    # response
+		      ns_f_opcode = 0,	    # standard query
+		      ns_f_aa     = 1,	    # authoritative
+		      ns_f_tc	  = 0,	    # not truncated
+		      ns_f_rd     = 1,	    # recursion desired
+		      ns_f_ra	  = 1,	    # recursion available
+		      ns_f_z	  = 0,	    # reserved
+		      ns_f_ad	  = 0,	    # dnssec authenticated
+		      ns_f_cd     = 0,	    # dnssec checking disabled
+		      ns_f_rcode  = 0,	    # no error
+		      ns_f_max    = 0,
+		     ),
+	 sections = dict(ns_s_qd = 1,	    # queries
+			 ns_s_an = 1,	    # answers
+			 ns_s_ns = 1,	    # name server
+			 ns_s_ar = 1,	    # additional
+			),
+	 record = 'a',
+	 host = 'www.company.example',
+	 data = file(os.path.join('data', 'www.company.example-response')).read(),
+	),
+    dict(id = 0xb7f8,
+	 flags = dict(ns_f_qr     = 1,	    # response
+		      ns_f_opcode = 0,	    # query
+		      ns_f_aa     = 1,	    # authoritative
+		      ns_f_tc	  = 0,	    # not truncated
+		      ns_f_rd     = 0,	    # recursion desired
+		      ns_f_ra	  = 0,	    # recursion not available
+		      ns_f_z	  = 0,	    # reserved
+		      ns_f_ad	  = 0,	    # dnssec authenticated
+		      ns_f_cd     = 0,	    # dnssec checking disabled
+		      ns_f_rcode  = 0,	    # no error
+		      ns_f_max    = 0,
+		     ),
+	 sections = dict(ns_s_qd = 1,	    # queries
+			 ns_s_an = 1,	    # answers
+			 ns_s_ns = 4,	    # name server
+			 ns_s_ar = 4,	    # additional
+			),
+	 record = 'a',
+	 host = 'www.microsoft.com.nsatc.net',
+	 data = file(os.path.join('data', 'www.microsoft.com-response')).read(),
+	),
+    dict(id = 0xb2b9,
+	 flags = dict(ns_f_qr     = 1,	    # response
+		      ns_f_opcode = 0,	    # standard query
+		      ns_f_aa     = 1,	    # authoritative
+		      ns_f_tc	  = 0,	    # not truncated
+		      ns_f_rd     = 1,	    # recursion desired
+		      ns_f_ra	  = 1,	    # recursion available
+		      ns_f_z	  = 0,	    # reserved
+		      ns_f_ad	  = 0,	    # dnssec authenticated
+		      ns_f_cd     = 0,	    # dnssec checking disabled
+		      ns_f_rcode  = 0,	    # no error
+		      ns_f_max    = 0,
+		     ),
+	 sections = dict(ns_s_qd = 1,	    # queries
+			 ns_s_an = 2,	    # answers
+			 ns_s_ns = 3,	    # name server
+			 ns_s_ar = 5,	    # additional
+			),
+	 record = 'mx',
+	 host = 'oreilly.com',
+	 data = file(os.path.join('data', 'oreilly.com-response')).read(),
+	),
+    ]
