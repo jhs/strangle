@@ -49,7 +49,7 @@ libbind_ns_msg_init(libbind_ns_msg *self, PyObject *args)
 
     result = ns_initparse(packetData, packetLength, &(self->packet));
     if( result != 0 ) {
-	PyErr_SetString(PyExc_StandardError, "BIND cannot parse this packet");
+	PyErr_SetString(PyExc_TypeError, "BIND cannot parse this packet");
 	return -1;
     }
 
