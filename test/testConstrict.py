@@ -110,6 +110,12 @@ class testDNSFlags(unittest.TestCase):
 	    msg = Constrict.DNSMessage(message['data'])
 	    self.assertEquals(msg.flags.opcode, message['flags']['ns_f_opcode'])
 
+    def testGetsAuthor(self):
+	"""Test whether DNSFlags determines whether the message is authoritative"""
+	for message in self.queries + self.responses:
+	    msg = Constrict.DNSMessage(message['data'])
+	    self.assertEquals(msg.flags.authoritative, message['flags']['ns_f_aa'])
+	
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )

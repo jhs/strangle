@@ -90,6 +90,11 @@ class DNSFlags(object):
 	    self.type = 'query'
 	
 	self.opcode = libbind.ns_msg_getflag(msg, libbind.ns_f_opcode)
+
+	if libbind.ns_msg_getflag(msg, libbind.ns_f_aa):
+	    self.authoritative = True
+	else:
+	    self.authoritative = False
     
 # TODO
 class DNSSection(object):
