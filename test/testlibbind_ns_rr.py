@@ -200,6 +200,44 @@ class ns_rrTestCase(unittest.TestCase):
 	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
 	assert(libbind.ns_rr_rdlen(rr) == 4)
 
+    def testReturnsRdata(self):
+	"""Test whether ns_rr_rdata returns the correct data"""
+	import struct, socket
+	def ip2str(str):
+	    vals = str.split('.')
+	    vals = map(int, vals)
+	    return ''.join( map(chr, vals) )
+
+	# Query
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_qd, 0)
+	assert(libbind.ns_rr_rdata(rr) is None)
+
+	# Answer
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 0)
+	assert(libbind.ns_rr_rdata(rr) == '\x00\x14\x05smtp1\xc0\x0c')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 1)
+	assert(libbind.ns_rr_rdata(rr) == '\x00\x14\x05smtp2\xc0\x0c')
+
+	# Name servers
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 0)
+	assert(libbind.ns_rr_rdata(rr) == '\x03ns1\x05sonic\x03net\00')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 1)
+	assert(libbind.ns_rr_rdata(rr) == '\x03ns2\xc0\x59')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 2)
+	assert(libbind.ns_rr_rdata(rr) == '\x02ns\xc0\x0c')
+
+	# Additional
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 0)
+	assert(libbind.ns_rr_rdata(rr) == ip2str('209.204.146.22'))
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 1)
+	assert(libbind.ns_rr_rdata(rr) == ip2str('209.58.173.22'))
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 2)
+	assert(libbind.ns_rr_rdata(rr) == ip2str('209.204.146.21'))
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 3)
+	assert(libbind.ns_rr_rdata(rr) == ip2str('208.201.224.11'))
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
+	assert(libbind.ns_rr_rdata(rr) == ip2str('208.201.224.33'))
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(ns_rrTestCase, 'test') )
