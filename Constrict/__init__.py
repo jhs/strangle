@@ -57,7 +57,7 @@ class DNSMessage(object):
     def __str__(self):
 	info = []
 
-	info.append("ID: %d" % self.id)
+	info.append("ID     : %d" % self.id)
 	info.append(self.flags.__str__())
 	for section in self.sections.values():
 	    info.append(section.__str__())
@@ -112,6 +112,18 @@ class DNSFlags(object):
 	    self.recursionAvailable = False
 	
 	self.response = libbind.ns_msg_getflag(msg, libbind.ns_f_rcode)
+
+    def __str__(self):
+	return "\n".join((
+	"Headers:",
+	"  Type               : %s" % self.type,
+	"  Opcode             : %d" % self.opcode,
+	"  Authoritative      : %s" % str(self.authoritative),
+	"  Truncated          : %s" % str(self.truncated),
+	"  Recursion Desired  : %s" % str(self.recursionDesired),
+	"  Recursion Available: %s" % str(self.recursionAvailable),
+	"  Response Code      : %d" % self.response,
+	))
     
 # TODO
 class DNSSection(object):
