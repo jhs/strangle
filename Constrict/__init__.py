@@ -56,14 +56,12 @@ class DNSMessage(object):
 	self.flags    = DNSFlags(msg)
 
 	self.sections = {}
-	sectionNames  = ('question', 'answer', 'authority', 'additional')
-	sectionLabels = ('ns_s_qd', 'ns_s_an', 'ns_s_ns'  , 'ns_s_ar'   )
-
-	for sectionName, sectionLabel in zip(sectionNames, sectionLabels):
-	    section = getattr(libbind, sectionLabel)
-	    totalRecords = libbind.ns_msg_count(msg, section)
-	    if totalRecords > 0:
+	for sectionName in ('question', 'answer', 'authority', 'additional'):
+	    try:
 		self.sections[sectionName] = DNSSection(msg, section=sectionName)
+	    except DNSSectionError:
+		# This is normal.  It means that the section does not exist in this message
+		pass
     
     def __str__(self):
 	info = []
@@ -145,7 +143,14 @@ class DNSSection(object):
     """
 
     def __init__(self, msg, *args, **kwargs):
-    
+	"""Initialize a message section"""
+
+	self.mapping = { 'question'   : 'ns_s_qd',
+			 'answer'     : 'ns_s_an',
+			 'authority'  : 'ns_s_ns',
+			 'additional' : 'ns_s_ar',
+		       }
+
 	if type(msg) is not libbind.ns_msg:
 	    raise DNSSectionError, "DNSSection initialized but without an ns_msg"
 	
@@ -157,14 +162,22 @@ class DNSSection(object):
 	    except IndexError:
 		raise DNSSectionError, "DNSSection requires a section name argument"
 	
-	if sectionName not in ('question', 'answer', 'authority', 'additional'):
+	if sectionName not in self.mapping.keys():
 	    raise DNSSectionError, "DNSSection requires a valid section name"
 
+	section = getattr(libbind, self.mapping[sectionName])
+	totalRecords = libbind.ns_msg_count(msg, section)
+	if totalRecords < 1:
+	    raise DNSSectionError, "No such section in this message"
+	
 	self.name = sectionName
 
 	self.records = []
+	for recordNum in range(0, totalRecords):
+	    self.addRecord(DNSRecord(msg, sectionName, recordNum))
 
     def addRecord(self, record):
+	"""Add a DNSRecord to the section"""
 	self.records.append(record)
 	return self.records[-1] is record
 

@@ -175,7 +175,7 @@ class testDNSSection(unittest.TestCase):
 	self.assertRaises(TypeError, Constrict.DNSSection)
 	self.assertRaises(Constrict.DNSSectionError, Constrict.DNSSection, 'useless')
 
-    def testDetectsMissingSect(self):
+    def testDetectsMissingSectArg(self):
 	"""Test that DNSSection properly handles a missing section argument"""
 	self.assertRaises(Constrict.DNSSectionError, Constrict.DNSSection, self.msg)
 
@@ -186,6 +186,16 @@ class testDNSSection(unittest.TestCase):
 
 	sect = Constrict.DNSSection(self.msg, section="additional")
 	assert(type(sect) is Constrict.DNSSection)
+
+    def testDetectsBadSect(self):
+	"""Test that DNSSection detects a bad section name"""
+	self.assertRaises(Constrict.DNSSectionError, Constrict.DNSSection, self.msg, 'bad name')
+
+    def testDetectsMissingSect(self):
+	"""Test that DNSSection detects a section that does not exist in the message"""
+	from Constrict import libbind
+	msg = libbind.ns_msg(file("data/www.microsoft.com-query").read())
+	self.assertRaises(Constrict.DNSSectionError, Constrict.DNSSection, msg, 'authority')
 
     def testHasAddRecord(self):
 	"""Test that DNSSection has an addRecord method"""
