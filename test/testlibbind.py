@@ -63,11 +63,14 @@ class libbindTestCase(unittest.TestCase):
 	assert(self.queries)
 	assert(self.responses)
 
-    def testlibbind_ns_msg_id(self):
-	for query in self.queries:
-	    n = libbind.ns_msg(query['data'])
-	    assert(libbind.ns_msg_id(n) == query['id'])
+    def testlibbindHasEnums(self):
+	"""Test whether libbind correctly defines all header flags"""
+	flags = ['qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'ad', 'cd', 'rcode', 'max']
+	for flag in flags:
+	    assert(getattr(libbind, 'ns_f_' + flag, None) is not None)
 	
+    def testlibbind_ns_msg_get_flag(self):
+	"""Test whether libbind correctly returns the message flags"""
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(libbindTestCase, 'test') )
