@@ -23,6 +23,9 @@ import libbind
 class ConstrictError(StandardError):
     """Error parsing DNS packet"""
 
+class DNSRecordError(ConstrictError):
+    """Error accessing record in message"""
+
 class DNSMessage(object):
     """A DNS message.  This is an easy-to-understand object-oriented
     representation of standard DNS queries and responses, based on libbind.
@@ -30,7 +33,8 @@ class DNSMessage(object):
     A DNSMessage contains these members:
     * id - a number representing the unique query ID
     * flags - a DNSFlags object from the header flags
-    * sections - a dict of sections (usually "question", "authority", etc.)
+    * records - A dict; the keys are sections ("question", "authority", etc.) and the
+                values are lists of DNSRecord objects.
     """
 
     def __init__(self, packetData):
@@ -47,12 +51,19 @@ class DNSMessage(object):
 	
 	self.id       = libbind.ns_msg_id(msg)
 	self.flags    = DNSFlags(msg)
-	self.sections = {}
 
-	for sectionName in ('question', 'answer', 'authority', 'additional'):
-	    section = DNSSection(msg, section=sectionName)
-	    if section is not None:
-		self.sections[sectionName] = section
+	self.sections = {}
+	sectionNames  = ('question', 'answer', 'authority', 'additional')
+	sectionLabels = ('ns_s_qd', 'ns_s_an', 'ns_s_ns'  , 'ns_s_ar'   )
+
+	for sectionName, sectionLabel in zip(sectionNames, sectionLabels):
+	    section = getattr(libbind, sectionLabel)
+
+	    totalRecords = libbind.ns_msg_count(msg, section)
+	    if totalRecords > 0:
+		self.sections[sectionName] = []
+		for recordNum in range(0, totalRecords):
+		    self.sections[sectionName].append(DNSRecord(msg, sectionName, recordNum))
     
     def __str__(self):
 	info = []
@@ -125,9 +136,21 @@ class DNSFlags(object):
 	"  Response Code      : %d" % self.response,
 	))
     
-# TODO
-class DNSSection(object):
-    def __init__(self, *args, **kwargs):
-	pass
+class DNSRecord(object):
+    """An individual record from a DNS message
+
+    DNSRecord objects contain the following members:
+	name       - Host name
+	type       - Query type ('A', 'NS', 'CNAME', etc.)
+	queryClass - Network class ('IN', 'Unknown')
+	ttl        - Time to live for the data in the record
+	data       - The value of the record
+    """
+
+    def __init__(self, msg, sectName, recordNum):
+	"""Fills in all record values to the object members"""
+
+	if type(msg) is not libbind.ns_msg:
+	    raise DNSRecordError, "DNSFlags initialized but without an ns_msg"
 
 # vim: sts=4 sw=4 noet

@@ -139,11 +139,34 @@ class testDNSFlags(unittest.TestCase):
 	for message in self.queries + self.responses:
 	    msg = Constrict.DNSMessage(message['data'])
 	    self.assertEquals(msg.flags.response, message['flags']['ns_f_rcode'])
-	
+
+class testDNSRecord(unittest.TestCase):
+    """Tests all interfaces to the DNSsection object"""
+    def setUp(self):
+	from Constrict import libbind
+
+	self.queries   = testutils.queries
+	self.responses = testutils.responses
+
+	self.msgFileName = "data/www.microsoft.com-response"
+	self.msg         = libbind.ns_msg( file(self.msgFileName).read() )
+
+    def testDetectsBadType(self):
+	"""Test that DNSSection insists on receiving proper arguments"""
+	self.assertRaises(TypeError, Constrict.DNSRecord, 'too few arguments')
+	self.assertRaises(TypeError, Constrict.DNSRecord, 'also not', 'enough')
+	self.assertRaises(TypeError, Constrict.DNSRecord, "now", "there's", "too", "many")
+
+	self.assertRaises(Constrict.DNSRecordError, Constrict.DNSRecord, "the", "wrong", "type")
+
+	rec = Constrict.DNSRecord(self.msg, 'query', 0)
+	assert(type(rec) is Constrict.DNSRecord)
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
     s.addTest( unittest.makeSuite(testDNSFlags  , 'test') )
+    s.addTest( unittest.makeSuite(testDNSRecord , 'test') )
     return s
 
 if __name__ == "__main__":
