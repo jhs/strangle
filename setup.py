@@ -7,6 +7,10 @@ if sys.platform == 'sunos5':
     # This handles Solaris systems with BIND installed from the package
     extras['include_dirs'] = ['/usr/local/bind/include']
     extras['library_dirs'] = ['/usr/local/bind/lib']
+
+    # This allows non-PIC code (in our case, libbind.a) to become a shared
+    # library.  It is not exactly the same as a true shared library, but
+    # it works.  See the GCC man page on -mimpure-text.
     extras['extra_link_args'] = ['-mimpure-text']
 
 libbind = Extension('Constrict.libbind',
