@@ -162,6 +162,12 @@ class DNSSection(object):
 
 	self.name = sectionName
 
+	self.records = []
+
+    def addRecord(self, record):
+	self.records.append(record)
+	return self.records[-1] is record
+
 class DNSRecord(object):
     """An individual record from a DNS message
 
