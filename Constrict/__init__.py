@@ -110,6 +110,8 @@ class DNSFlags(object):
 	    self.recursionAvailable = True
 	else:
 	    self.recursionAvailable = False
+	
+	self.response = libbind.ns_msg_getflag(msg, libbind.ns_f_rcode)
     
 # TODO
 class DNSSection(object):

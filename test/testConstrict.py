@@ -134,6 +134,12 @@ class testDNSFlags(unittest.TestCase):
 	    msg = Constrict.DNSMessage(message['data'])
 	    self.assertEquals(msg.flags.recursionAvailable, message['flags']['ns_f_ra'])
 	
+    def testGetsResponse(self):
+	"""Test whether DNSFlags determines the correct response code"""
+	for message in self.queries + self.responses:
+	    msg = Constrict.DNSMessage(message['data'])
+	    self.assertEquals(msg.flags.response, message['flags']['ns_f_rcode'])
+	
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
