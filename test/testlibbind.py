@@ -110,10 +110,16 @@ class libbindTestCase(unittest.TestCase):
 	self.flags = ['qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'ad', 'cd', 'rcode', 'max']
 	self.flags = map(lambda str: 'ns_f_' + str, self.flags)
 
+	self.sections = ['qd', 'zn', 'an', 'pr', 'ns', 'ud', 'ar']
+	self.sections = map(lambda str: 'ns_s_' + str, self.sections)
+
     def testlibbindHasEnums(self):
 	"""Test whether libbind correctly defines all header flags"""
 	for flag in self.flags:
 	    assert(getattr(libbind, flag, None) is not None)
+	
+	for section in self.sections:
+	    assert(getattr(libbind, section, None) is not None)
 	
     def testlibbind_ns_msg_getflagArgs(self):
 	"""Test whether ns_msg_getflags accepts the proper arguments"""

@@ -172,7 +172,7 @@ initlibbind(void)
     Py_INCREF(&libbind_ns_msgType);
     PyModule_AddObject(m, "ns_msg", (PyObject *)&libbind_ns_msgType);
 
-    /* These are the ns_flag enums.  We just use Python ints (PyLongs). */
+    /* These are the ns_flag enums.  We just use Python ints. */
     PyModule_AddObject(m, "ns_f_qr"    , PyInt_FromLong(ns_f_qr));
     PyModule_AddObject(m, "ns_f_opcode", PyInt_FromLong(ns_f_opcode));
     PyModule_AddObject(m, "ns_f_aa", PyInt_FromLong(ns_f_aa));
@@ -184,6 +184,15 @@ initlibbind(void)
     PyModule_AddObject(m, "ns_f_cd", PyInt_FromLong(ns_f_cd));
     PyModule_AddObject(m, "ns_f_rcode", PyInt_FromLong(ns_f_rcode));
     PyModule_AddObject(m, "ns_f_max", PyInt_FromLong(ns_f_max));
+
+    /* These are the ns_sect enums.  We just use Python ints. */
+    PyModule_AddObject(m, "ns_s_qd", PyInt_FromLong(ns_s_qd));
+    PyModule_AddObject(m, "ns_s_zn", PyInt_FromLong(ns_s_zn));
+    PyModule_AddObject(m, "ns_s_an", PyInt_FromLong(ns_s_an));
+    PyModule_AddObject(m, "ns_s_pr", PyInt_FromLong(ns_s_pr));
+    PyModule_AddObject(m, "ns_s_ns", PyInt_FromLong(ns_s_ns));
+    PyModule_AddObject(m, "ns_s_ud", PyInt_FromLong(ns_s_ud));
+    PyModule_AddObject(m, "ns_s_ar", PyInt_FromLong(ns_s_ar));
 }
 
 // vim: sts=4 sw=4 noet
