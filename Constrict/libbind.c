@@ -281,12 +281,39 @@ libbind_ns_rr_name(PyObject *self, PyObject *args)
     return PyString_FromString(name);
 }
 
+static char libbind_ns_rr_type_doc[] =
+"Returns the type of an ns_rr record";
+
+static PyObject *
+libbind_ns_rr_type(PyObject *self, PyObject *args)
+{
+    PyObject *rr;
+    uint16_t type;
+
+    PyTypeObject *argType;
+    char         *argTypeStr;
+
+    if( !PyArg_ParseTuple(args, "O", &rr) )
+	return NULL;
+
+    argType    = (PyTypeObject *)(rr->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
+	return NULL;
+    }
+
+    type = ns_rr_type(((libbind_ns_rr *)rr)->record);
+    return PyInt_FromLong((long)type);
+}
+
 static PyMethodDef libbind_methods[] = {
     {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
     {"ns_msg_count"  , libbind_ns_msg_count  , METH_VARARGS, libbind_ns_msg_count_doc},
 
     {"ns_rr_name"    , libbind_ns_rr_name    , METH_VARARGS, libbind_ns_rr_name_doc},
+    {"ns_rr_type"    , libbind_ns_rr_type    , METH_VARARGS, libbind_ns_rr_type_doc},
     {NULL, NULL}
 };
 
@@ -336,6 +363,60 @@ initlibbind(void)
     PyModule_AddObject(m, "ns_s_ns", PyInt_FromLong(ns_s_ns));
     PyModule_AddObject(m, "ns_s_ud", PyInt_FromLong(ns_s_ud));
     PyModule_AddObject(m, "ns_s_ar", PyInt_FromLong(ns_s_ar));
+
+    /* These are the allowed record types. */
+    PyModule_AddObject(m, "ns_t_invalid", PyInt_FromLong(ns_t_invalid));
+    PyModule_AddObject(m, "ns_t_a", PyInt_FromLong(ns_t_a));
+    PyModule_AddObject(m, "ns_t_ns", PyInt_FromLong(ns_t_ns));
+    PyModule_AddObject(m, "ns_t_md", PyInt_FromLong(ns_t_md));
+    PyModule_AddObject(m, "ns_t_mf", PyInt_FromLong(ns_t_mf));
+    PyModule_AddObject(m, "ns_t_cname", PyInt_FromLong(ns_t_cname));
+    PyModule_AddObject(m, "ns_t_soa", PyInt_FromLong(ns_t_soa));
+    PyModule_AddObject(m, "ns_t_mb", PyInt_FromLong(ns_t_mb));
+    PyModule_AddObject(m, "ns_t_mg", PyInt_FromLong(ns_t_mg));
+    PyModule_AddObject(m, "ns_t_mr", PyInt_FromLong(ns_t_mr));
+    PyModule_AddObject(m, "ns_t_null", PyInt_FromLong(ns_t_null));
+    PyModule_AddObject(m, "ns_t_wks", PyInt_FromLong(ns_t_wks));
+    PyModule_AddObject(m, "ns_t_ptr", PyInt_FromLong(ns_t_ptr));
+    PyModule_AddObject(m, "ns_t_hinfo", PyInt_FromLong(ns_t_hinfo));
+    PyModule_AddObject(m, "ns_t_minfo", PyInt_FromLong(ns_t_minfo));
+    PyModule_AddObject(m, "ns_t_mx", PyInt_FromLong(ns_t_mx));
+    PyModule_AddObject(m, "ns_t_txt", PyInt_FromLong(ns_t_txt));
+    PyModule_AddObject(m, "ns_t_rp", PyInt_FromLong(ns_t_rp));
+    PyModule_AddObject(m, "ns_t_afsdb", PyInt_FromLong(ns_t_afsdb));
+    PyModule_AddObject(m, "ns_t_x25", PyInt_FromLong(ns_t_x25));
+    PyModule_AddObject(m, "ns_t_isdn", PyInt_FromLong(ns_t_isdn));
+    PyModule_AddObject(m, "ns_t_rt", PyInt_FromLong(ns_t_rt));
+    PyModule_AddObject(m, "ns_t_nsap", PyInt_FromLong(ns_t_nsap));
+    PyModule_AddObject(m, "ns_t_nsap_ptr", PyInt_FromLong(ns_t_nsap_ptr));
+    PyModule_AddObject(m, "ns_t_sig", PyInt_FromLong(ns_t_sig));
+    PyModule_AddObject(m, "ns_t_key", PyInt_FromLong(ns_t_key));
+    PyModule_AddObject(m, "ns_t_px", PyInt_FromLong(ns_t_px));
+    PyModule_AddObject(m, "ns_t_gpos", PyInt_FromLong(ns_t_gpos));
+    PyModule_AddObject(m, "ns_t_aaaa", PyInt_FromLong(ns_t_aaaa));
+    PyModule_AddObject(m, "ns_t_loc", PyInt_FromLong(ns_t_loc));
+    PyModule_AddObject(m, "ns_t_nxt", PyInt_FromLong(ns_t_nxt));
+    PyModule_AddObject(m, "ns_t_eid", PyInt_FromLong(ns_t_eid));
+    PyModule_AddObject(m, "ns_t_nimloc", PyInt_FromLong(ns_t_nimloc));
+    PyModule_AddObject(m, "ns_t_srv", PyInt_FromLong(ns_t_srv));
+    PyModule_AddObject(m, "ns_t_atma", PyInt_FromLong(ns_t_atma));
+    PyModule_AddObject(m, "ns_t_naptr", PyInt_FromLong(ns_t_naptr));
+    PyModule_AddObject(m, "ns_t_kx", PyInt_FromLong(ns_t_kx));
+    PyModule_AddObject(m, "ns_t_cert", PyInt_FromLong(ns_t_cert));
+    PyModule_AddObject(m, "ns_t_a6", PyInt_FromLong(ns_t_a6));
+    PyModule_AddObject(m, "ns_t_dname", PyInt_FromLong(ns_t_dname));
+    PyModule_AddObject(m, "ns_t_sink", PyInt_FromLong(ns_t_sink));
+    PyModule_AddObject(m, "ns_t_opt", PyInt_FromLong(ns_t_opt));
+    //PyModule_AddObject(m, "ns_t_apl", PyInt_FromLong(ns_t_apl));	/* (These two have no C symbol even       */
+    //PyModule_AddObject(m, "ns_t_tkey", PyInt_FromLong(ns_t_tkey));	/*  though I got this code from nameser.h */
+    PyModule_AddObject(m, "ns_t_tsig", PyInt_FromLong(ns_t_tsig));
+    PyModule_AddObject(m, "ns_t_ixfr", PyInt_FromLong(ns_t_ixfr));
+    PyModule_AddObject(m, "ns_t_axfr", PyInt_FromLong(ns_t_axfr));
+    PyModule_AddObject(m, "ns_t_mailb", PyInt_FromLong(ns_t_mailb));
+    PyModule_AddObject(m, "ns_t_maila", PyInt_FromLong(ns_t_maila));
+    PyModule_AddObject(m, "ns_t_any", PyInt_FromLong(ns_t_any));
+    PyModule_AddObject(m, "ns_t_zxfr", PyInt_FromLong(ns_t_zxfr));
+    PyModule_AddObject(m, "ns_t_max", PyInt_FromLong(ns_t_max));
 }
 
 // vim: sts=4 sw=4 noet

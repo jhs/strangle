@@ -94,6 +94,39 @@ class ns_rrTestCase(unittest.TestCase):
 	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
 	assert(libbind.ns_rr_name(rr) == 'ns2.sonic.net')
 
+    def testReturnsType(self):
+	"""Test whether ns_rr_type returns the correct type"""
+
+	# Query
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_qd, 0)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_mx)
+
+	# Answer
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 0)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_mx)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 1)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_mx)
+
+	# Name servers
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 0)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_ns)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 1)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_ns)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 2)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_ns)
+
+	# Additional
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 0)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_a)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 1)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_a)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 2)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_a)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 3)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_a)
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
+	assert(libbind.ns_rr_type(rr) == libbind.ns_t_a)
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(ns_rrTestCase, 'test') )
