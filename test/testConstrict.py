@@ -237,6 +237,39 @@ class testDNSRecord(unittest.TestCase):
 	rec = Constrict.DNSRecord(self.msg, 'question', 0)
 	assert(type(rec) is Constrict.DNSRecord)
 
+    def testHasName(self):
+	"""Test whether DNSRecord has the proper name member"""
+	from Constrict import DNSRecord
+
+	# Question
+	rr = DNSRecord(self.msg, 'question', 0)
+	assert rr.name == 'www.microsoft.com.nsatc.net'
+
+	# Answer
+	rr = DNSRecord(self.msg, 'answer', 0)
+	assert rr.name == 'www.microsoft.com.nsatc.net'
+
+	# Authority
+	rr = DNSRecord(self.msg, 'authority', 0)
+	assert rr.name == 'nsatc.net'
+	rr = DNSRecord(self.msg, 'authority', 1)
+	assert rr.name == 'nsatc.net'
+	rr = DNSRecord(self.msg, 'authority', 2)
+	assert rr.name == 'nsatc.net'
+	rr = DNSRecord(self.msg, 'authority', 3)
+	assert rr.name == 'nsatc.net'
+
+	# Additional
+	rr = DNSRecord(self.msg, 'additional', 0)
+	assert rr.name == 'j.ns.nsatc.net'
+	rr = DNSRecord(self.msg, 'additional', 1)
+	assert rr.name == 'k.ns.nsatc.net'
+	rr = DNSRecord(self.msg, 'additional', 2)
+	assert rr.name == 'us-ca-6.ns.nsatc.net'
+	rr = DNSRecord(self.msg, 'additional', 3)
+	assert rr.name == 'l.ns.nsatc.net'
+
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )

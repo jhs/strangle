@@ -21,9 +21,11 @@
 import os, sys
 
 sys.path.insert(0, '.')
+sys.path.append('..')
 from Constrict import *
 
 fileName = 'oreilly.com-response'
+fileName = 'www.microsoft.com-response'
 if os.path.isfile(os.path.join('data', fileName)):
     f = file(os.path.join('data', fileName))
 elif os.path.isfile(os.path.join('test', 'data', fileName)):
