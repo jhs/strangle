@@ -31,6 +31,10 @@ fullSuite.addTest(testlibbind_ns_rr.suite())
 import testlibbind
 fullSuite.addTest(testlibbind.suite())
 
+import testConstrict
+fullSuite.addTest(testConstrict.suite())
+
 if __name__ == "__main__":
     runner = unittest.TextTestRunner()
+    runner.verbosity = 2
     runner.run(fullSuite)

@@ -30,10 +30,10 @@ class testDNSMessage(unittest.TestCase):
 	self.queries   = testutils.queries
 	self.responses = testutils.responses
 
-	self.msgFileName = "data/oreilly.com-respones"
+	self.msgFileName = "data/oreilly.com-response"
 
     def testNoticeInvalid(self):
-	"""Test whether the ns_msg type can handle bad data"""
+	"""Test whether the DNSMessage parser can handle bad data"""
 	from Constrict import DNSMessage, ConstrictError
 	import random
 
@@ -74,9 +74,40 @@ class testDNSMessage(unittest.TestCase):
 	    msg = Constrict.DNSMessage(message['data'])
 	    self.assertEquals(msg.id, message['id'])
 
+class testDNSFlags(unittest.TestCase):
+    """Tests all interfaces to the DNSFlags object"""
+    def setUp(self):
+	self.queries   = testutils.queries
+	self.responses = testutils.responses
+
+	self.msgFileName = "data/oreilly.com-response"
+
+    def testDetectsBadType(self):
+	"""Test that DNSFlags insists on receiving a ns_msg argument"""
+	self.assertRaises(Constrict.ConstrictError, Constrict.DNSFlags, 'foo')
+	self.assertRaises(Constrict.ConstrictError, Constrict.DNSFlags, 23)
+
+	dataFile = file(self.msgFileName)
+	self.assertRaises(Constrict.ConstrictError, Constrict.DNSFlags, dataFile)
+
+	data = dataFile.read()
+	self.assertRaises(Constrict.ConstrictError, Constrict.DNSFlags, data)
+
+    def testDetectsQR(self):
+	"""Test whether DNSFlags detects whether the message is a query or response"""
+	for message in self.queries:
+	    messageText = message['data']
+	    msg = Constrict.DNSMessage(messageText)
+	    self.assertEquals(msg.flags.type, 'query')
+	for message in self.responses:
+	    messageText = message['data']
+	    msg = Constrict.DNSMessage(messageText)
+	    self.assertEquals(msg.flags.type, 'response')
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
+    s.addTest( unittest.makeSuite(testDNSFlags  , 'test') )
     return s
 
 if __name__ == "__main__":

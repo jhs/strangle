@@ -64,10 +64,30 @@ class DNSMessage(object):
 	
 	return "\n".join(info)
 
-# TODO
 class DNSFlags(object):
-    def __init__(self, *args, **kwargs):
-	pass
+    """Flags from a DNS message headers
+
+    A DNSFlags object contains the following members:
+	type               - String ('query', 'response')
+	opcode             - Integer
+	authoritative      - Boolean
+	truncated          - Boolean
+	recursionDesired   - Boolean
+	recursionAvailable - Boolean
+	reponse            - Integer (server response code)
+    """
+
+    def __init__(self, msg):
+	"""Fills in all flag values to the object members"""
+
+	if type(msg) is not libbind.ns_msg:
+	    raise ConstrictError, "DNSFlags initialized but without an ns_msg"
+
+	isResponse = libbind.ns_msg_getflag(msg, libbind.ns_f_qr)
+	if isResponse:
+	    self.type = 'response'
+	else:
+	    self.type = 'query'
     
 # TODO
 class DNSSection(object):
