@@ -44,6 +44,11 @@ class libbindTestCase(unittest.TestCase):
 			      ns_f_rcode  = 0,	    # no error
 			      ns_f_max    = 0,
 			     ),
+		 sections = dict(ns_s_qd = 1,	    # queries
+				 ns_s_an = 0,	    # answers
+				 ns_s_ns = 0,	    # name server
+				 ns_s_ar = 0,	    # additional
+				),
 		 record = 'a',
 		 host = 'www.company.example',
 		 data = file(os.path.join('data', 'www.company.example-query')).read(),
@@ -61,6 +66,11 @@ class libbindTestCase(unittest.TestCase):
 			      ns_f_rcode  = 0,	    # no error
 			      ns_f_max    = 0,
 			     ),
+		 sections = dict(ns_s_qd = 1,	    # queries
+				 ns_s_an = 0,	    # answers
+				 ns_s_ns = 0,	    # name server
+				 ns_s_ar = 0,	    # additional
+				),
 		 record = 'a',
 		 host = 'www.microsoft.com.nsatc.net',
 		 data = file(os.path.join('data', 'www.microsoft.com-query')).read(),
@@ -81,6 +91,11 @@ class libbindTestCase(unittest.TestCase):
 			      ns_f_rcode  = 0,	    # no error
 			      ns_f_max    = 0,
 			     ),
+		 sections = dict(ns_s_qd = 1,	    # queries
+				 ns_s_an = 1,	    # answers
+				 ns_s_ns = 1,	    # name server
+				 ns_s_ar = 1,	    # additional
+				),
 		 record = 'a',
 		 host = 'www.company.example',
 		 data = file(os.path.join('data', 'www.company.example-response')).read(),
@@ -98,6 +113,11 @@ class libbindTestCase(unittest.TestCase):
 			      ns_f_rcode  = 0,	    # no error
 			      ns_f_max    = 0,
 			     ),
+		 sections = dict(ns_s_qd = 1,	    # queries
+				 ns_s_an = 1,	    # answers
+				 ns_s_ns = 4,	    # name server
+				 ns_s_ar = 4,	    # additional
+				),
 		 record = 'a',
 		 host = 'www.microsoft.com.nsatc.net',
 		 data = file(os.path.join('data', 'www.microsoft.com-response')).read(),
@@ -110,11 +130,11 @@ class libbindTestCase(unittest.TestCase):
 	self.flags = ['qr', 'opcode', 'aa', 'tc', 'rd', 'ra', 'z', 'ad', 'cd', 'rcode', 'max']
 	self.flags = map(lambda str: 'ns_f_' + str, self.flags)
 
-	self.sections = ['qd', 'zn', 'an', 'pr', 'ns', 'ud', 'ar']
+	self.sections = ['qd', 'an', 'ns', 'ar']
 	self.sections = map(lambda str: 'ns_s_' + str, self.sections)
 
     def testlibbindHasEnums(self):
-	"""Test whether libbind correctly defines all header flags"""
+	"""Test whether libbind correctly defines all libbind enums"""
 	for flag in self.flags:
 	    assert(getattr(libbind, flag, None) is not None)
 	
@@ -137,6 +157,23 @@ class libbindTestCase(unittest.TestCase):
 	    for flag in self.flags:
 		flagVal = getattr(libbind, flag)
 		self.assertEquals(libbind.ns_msg_getflag(msg, flagVal), message['flags'][flag])
+
+    def testlibbind_ns_msg_countArgs(self):
+	"""Test whether ns_msg_count accepts the proper arguments"""
+	self.assertRaises(TypeError, libbind.ns_msg_count)
+
+	msg = libbind.ns_msg(self.queries[0]['data'])
+	self.assertRaises(TypeError, libbind.ns_msg_count, msg)
+
+	self.assertRaises(TypeError, libbind.ns_msg_count, msg, 'not an int')
+
+    def testlibbind_ns_msg_count(self):
+	"""Test whether ns_msg_count correctly returns the section counts"""
+	for message in self.queries + self.responses:
+	    msg = libbind.ns_msg(message['data'])
+	    for section in self.sections:
+		sectionVal = getattr(libbind, section)
+		self.assertEquals(libbind.ns_msg_count(msg, sectionVal), message['sections'][section])
 
 def suite():
     s = unittest.TestSuite()

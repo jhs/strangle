@@ -148,9 +148,37 @@ libbind_ns_msg_getflag(PyObject *self, PyObject *args)
     return Py_BuildValue("i", (int)flagVal);
 }
 
+static char libbind_ns_msg_count_doc[] =
+"Returns the number of entries in a given section of an ns_msg object";
+
+static PyObject *
+libbind_ns_msg_count(PyObject *self, PyObject *args)
+{
+    PyObject *message;
+    int section;
+    u_int16_t count;
+
+    PyTypeObject *messageType;
+    char         *messageTypeStr;
+
+    if( !PyArg_ParseTuple(args, "Oi", &message, &section) )
+	return NULL;
+
+    messageType    = (PyTypeObject *)(message->ob_type);
+    messageTypeStr = messageType->tp_name;
+    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
+	return NULL;
+    }
+
+    count = ns_msg_count(((libbind_ns_msg *)message)->packet, section);
+    return Py_BuildValue("i", (int)count);
+}
+
 static PyMethodDef libbind_methods[] = {
-    {"ns_msg_id"      , libbind_ns_msg_id      , METH_VARARGS, libbind_ns_msg_id_doc},
+    {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
+    {"ns_msg_count"  , libbind_ns_msg_count  , METH_VARARGS, libbind_ns_msg_count_doc},
     {NULL, NULL}
 };
 
