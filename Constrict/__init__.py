@@ -105,6 +105,11 @@ class DNSFlags(object):
 	    self.recursionDesired = True
 	else:
 	    self.recursionDesired = False
+	
+	if libbind.ns_msg_getflag(msg, libbind.ns_f_ra):
+	    self.recursionAvailable = True
+	else:
+	    self.recursionAvailable = False
     
 # TODO
 class DNSSection(object):

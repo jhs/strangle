@@ -128,6 +128,12 @@ class testDNSFlags(unittest.TestCase):
 	    msg = Constrict.DNSMessage(message['data'])
 	    self.assertEquals(msg.flags.recursionDesired, message['flags']['ns_f_rd'])
 	
+    def testGetsRA(self):
+	"""Test whether DNSFlags determines whether recursion is available"""
+	for message in self.queries + self.responses:
+	    msg = Constrict.DNSMessage(message['data'])
+	    self.assertEquals(msg.flags.recursionAvailable, message['flags']['ns_f_ra'])
+	
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )
