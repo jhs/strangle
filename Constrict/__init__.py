@@ -40,6 +40,9 @@ class DNSMessage(object):
     * flags - a DNSFlags object from the header flags
     * records - A dict; the keys are sections ("question", "authority", etc.) and the
                 values are lists of DNSRecord objects.
+    
+    Also there is a "msg" member, which references the low-level libbind.ns_msg object,
+    if you need it.
     """
 
     def __init__(self, packetData):
@@ -54,6 +57,8 @@ class DNSMessage(object):
 	except TypeError:
 	    raise ConstrictError, "Failed to parse the packet"
 	
+	self.msg = msg
+    
 	self.id       = libbind.ns_msg_id(msg)
 	self.flags    = DNSFlags(msg)
 
@@ -62,9 +67,9 @@ class DNSMessage(object):
 	    try:
 		self.sections[sectionName] = DNSSection(msg, section=sectionName)
 	    except DNSSectionError:
-		# This is normal.  It means that the section does not exist in this message
+		# This is normal.  It means that the section does not exist in this message.
 		pass
-    
+
     def __str__(self):
 	info = []
 
@@ -218,6 +223,9 @@ class DNSRecord(object):
 	queryClass - Network class ('IN', 'Unknown')
 	ttl        - Time to live for the data in the record
 	data       - The value of the record or None if not applicable
+
+    Also there is an "rr" member, which references the low-level libbind.ns_rr object,
+    if you need it.
     """
 
     def __init__(self, msg, sectionName, recordNum):
