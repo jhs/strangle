@@ -413,6 +413,13 @@ libbind_ns_rr_rdata(PyObject *self, PyObject *args)
     length = ns_rr_rdlen(((libbind_ns_rr *)rr)->record);
     rdata  = ns_rr_rdata(((libbind_ns_rr *)rr)->record);
 
+    /* If the result is NULL it means there is no data in the record, so return None.
+     * This seems to be happening implicitly from Py_BuildValue but we do it
+     * anyway for clarity.
+     */
+    if( rdata == (const u_char *)NULL )
+	return Py_None;
+
     return Py_BuildValue("s#", rdata, length);
 }
 
