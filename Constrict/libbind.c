@@ -1,4 +1,4 @@
-/* libbind.c - Wraps around the ns_msg_* BIND library routines
+/* libbind.c - A wrapper around the bind library
  *
  * This file is part of Constrict.
  *
@@ -18,15 +18,12 @@
  */
 
 #include <Python.h>
-//#include <python2.3/structmember.h>
 
-/*
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/nameser.h>
 #include <resolv.h>
-*/
 
 static char libbind_doc[] = 
 "This module is a thin wrapper around the libbind parsing routines.";
@@ -47,13 +44,57 @@ static PyMethodDef libbind_methods[] = {
     {NULL, NULL}
 };
 
+static char ns_msg_doc[] =
+"This is a Python type that wraps the libbind ns_msg structure.  It is useful\n\
+with the other libbind functions";
+
+typedef struct {
+    PyObject_HEAD
+    ns_msg packet;
+} libbind_ns_msg;
+
+static PyTypeObject libbind_ns_msgType = {
+    PyObject_HEAD_INIT(NULL)
+    0,						/* ob_size */
+    "Constrict.libbind.ns_msg",			/* tp_name */
+    sizeof(libbind_ns_msg),			/* tp_basicsize */
+    0,						/* tp_itemsize */
+    0,						/* tp_dealloc */
+    0,						/* tp_print */
+    0,						/* tp_getattr */
+    0,						/* tp_setattr */
+    0,						/* tp_compare */
+    0,						/* tp_repr */
+    0,						/* tp_as_number */
+    0,						/* tp_as_sequence */
+    0,						/* tp_as_mapping */
+    0,						/* tp_hash */
+    0,						/* tp_call */
+    0,						/* tp_str */
+    0,						/* tp_getattro */
+    0,						/* tp_setattro */
+    0,						/* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT			,	/* tp_flags */
+    ns_msg_doc,					/* tp_doc */
+};
+
 /* Initialize the extension. */
 PyMODINIT_FUNC
 initlibbind(void)
 {
     PyObject *m;
 
+    libbind_ns_msgType.tp_new = PyType_GenericNew;
+    if( PyType_Ready(&libbind_ns_msgType) < 0 )
+	return;
+
     m = Py_InitModule3("Constrict.libbind", libbind_methods, libbind_doc);
+
+    if( m == NULL )
+	return;
+
+    Py_INCREF(&libbind_ns_msgType);
+    PyModule_AddObject(m, "ns_msg", (PyObject *)&libbind_ns_msgType);
 }
 
 // vim: sts=4 sw=4 noet

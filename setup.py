@@ -1,7 +1,9 @@
 from distutils.core import setup, Extension
 
 libbind = Extension('Constrict.libbind',
-		    ['Constrict/libbind.c'],
+		    [
+		     'Constrict/libbind.c',
+		    ],
 		    libraries=['bind'],
 		   )
 
