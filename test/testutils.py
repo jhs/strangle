@@ -20,10 +20,24 @@
 
 # Should be imported for testing
 import sys
+import random
 
 baseDir  = ".."
 if baseDir not in sys.path:
     sys.path.insert(0, baseDir)
+
+# Random number generator
+try:
+    rng = file('/dev/urandom', 'r')
+except IOError:
+    # Need to use our own
+    class RNG(object):
+	def read(self, size):
+	    str = ""
+	    for byte in range(0, size):
+		str = str + chr(random.randrange(0, 255))
+	    return str
+    rng = RNG()
 
 def someIPAddresses(quantity=500, useInvalid=True):
     """Shuffled IP addresses.  BY DEFAULT INCLUDES INVALID ADDRESSES
@@ -36,7 +50,7 @@ def someIPAddresses(quantity=500, useInvalid=True):
     # is range(0, quantity).  Then each list is shuffled.  This algorithm
     # guarantees that every byte will be tried if quantity >= 255.  If
     # the "useInvalid" flag is True, then the byte values will go above 255.
-    import random, sets
+    import sets
 
     def makeValid(x):
 	return x % 256

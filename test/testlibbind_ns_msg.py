@@ -18,7 +18,7 @@
 # along with Constrict; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import sys, testutils
+import sys, testutils, random
 import unittest
 
 from Constrict import libbind
@@ -41,18 +41,7 @@ class ns_msgTestCase(unittest.TestCase):
 
     def testNoticeInvalid(self):
 	"""Test whether the ns_msg type can handle bad data"""
-	import random
-	try:
-	    rng = file('/dev/urandom', 'r')
-	except IOError:
-	    # Need to use our own
-	    class RNG(object):
-		def read(self, size):
-		    str = ""
-		    for byte in range(0, size):
-			str = str + chr(random.randrange(0, 255))
-		    return str
-	    rng = RNG()
+	rng = testutils.rng
 	
 	for testNum in range(0, 50):
 	    packetLength = random.randrange(20, 80)

@@ -96,6 +96,86 @@ static PyTypeObject libbind_ns_msgType = {
     (initproc)libbind_ns_msg_init,		/* tp_init           */
 };
 
+static char libbind_ns_rr_doc[] =
+"This is a Python type that wraps the libbind ns_rr structure.  It is useful\n\
+with the other libbind functions";
+
+typedef struct {
+    PyObject_HEAD
+    ns_rr record;
+} libbind_ns_rr;
+
+/* __init__() */
+static int
+libbind_ns_rr_init(libbind_ns_rr *self, PyObject *args)
+{
+    PyObject       *firstArg;
+    libbind_ns_msg *message;
+    int section, rrnum, result;
+    PyTypeObject *messageType;
+    char         *messageTypeStr;
+
+    if( !PyArg_ParseTuple(args, "Oii", &firstArg, &section, &rrnum) )
+	return -1;
+
+    messageType    = (PyTypeObject *)(firstArg->ob_type);
+    messageTypeStr = messageType->tp_name;
+    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
+	return -1;
+    }
+
+    message = (libbind_ns_msg *)firstArg;
+
+    result = ns_parserr(&(message->packet), section, rrnum, &(self->record));
+    if( result != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "BIND says there is no such record in this message");
+	return -1;
+    }
+
+    return 0;
+}
+
+static PyTypeObject libbind_ns_rrType = {
+    PyObject_HEAD_INIT(NULL)
+    0,						/* ob_size */
+    "Constrict.libbind.ns_rr",			/* tp_name */
+    sizeof(libbind_ns_rr),			/* tp_basicsize */
+    0,						/* tp_itemsize */
+    0,						/* tp_dealloc */
+    0,						/* tp_print */
+    0,						/* tp_getattr */
+    0,						/* tp_setattr */
+    0,						/* tp_compare */
+    0,						/* tp_repr */
+    0,						/* tp_as_number */
+    0,						/* tp_as_sequence */
+    0,						/* tp_as_mapping */
+    0,						/* tp_hash */
+    0,						/* tp_call */
+    0,						/* tp_str */
+    0,						/* tp_getattro */
+    0,						/* tp_setattro */
+    0,						/* tp_as_buffer */
+    Py_TPFLAGS_DEFAULT,				/* tp_flags */
+    libbind_ns_rr_doc,				/* tp_doc */
+    0,						/* tp_traverse       */
+    0,						/* tp_clear          */
+    0,						/* tp_richcompare    */
+    0,						/* tp_weaklistoffset */
+    0,						/* tp_iter           */
+    0,						/* tp_iternext       */
+    0,						/* tp_methods        */
+    0,						/* tp_members        */
+    0,						/* tp_getset         */
+    0,						/* tp_base           */
+    0,						/* tp_dict           */
+    0,						/* tp_descr_get      */
+    0,						/* tp_descr_set      */
+    0,						/* tp_dictoffset     */
+    (initproc)libbind_ns_rr_init,		/* tp_init           */
+};
+
 static char libbind_ns_msg_id_doc[] =
 "Returns the DNS message unique ID";
 
@@ -192,6 +272,10 @@ initlibbind(void)
     if( PyType_Ready(&libbind_ns_msgType) < 0 )
 	return;
 
+    libbind_ns_rrType.tp_new = PyType_GenericNew;
+    if( PyType_Ready(&libbind_ns_rrType) < 0 )
+	return;
+
     m = Py_InitModule3("Constrict.libbind", libbind_methods, libbind_doc);
 
     if( m == NULL )
@@ -199,6 +283,9 @@ initlibbind(void)
 
     Py_INCREF(&libbind_ns_msgType);
     PyModule_AddObject(m, "ns_msg", (PyObject *)&libbind_ns_msgType);
+
+    Py_INCREF(&libbind_ns_rrType);
+    PyModule_AddObject(m, "ns_rr" , (PyObject *)&libbind_ns_rrType);
 
     /* These are the ns_flag enums.  We just use Python ints. */
     PyModule_AddObject(m, "ns_f_qr"    , PyInt_FromLong(ns_f_qr));

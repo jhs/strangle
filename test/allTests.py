@@ -25,6 +25,12 @@ fullSuite = unittest.TestSuite()
 import testlibbind_ns_msg
 fullSuite.addTest(testlibbind_ns_msg.suite())
 
+import testlibbind_ns_rr
+fullSuite.addTest(testlibbind_ns_rr.suite())
+
+import testlibbind
+fullSuite.addTest(testlibbind.suite())
+
 if __name__ == "__main__":
     runner = unittest.TextTestRunner()
     runner.run(fullSuite)
