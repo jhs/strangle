@@ -25,6 +25,8 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 
+#include <strings.h>
+
 static char libbind_doc[] = 
 "This module is a thin wrapper around the libbind parsing routines.";
 
@@ -414,6 +416,63 @@ libbind_ns_rr_rdata(PyObject *self, PyObject *args)
     return Py_BuildValue("s#", rdata, length);
 }
 
+static char libbind_ns_name_uncompress_doc[] =
+"Returns a string of the uncompressed hostname from an ns_msg object.\n\
+    \n\
+    Only pass this function an ns_msg object and the ns_rr record which\n\
+    has the data you want decompressed.";
+
+static PyObject *
+libbind_ns_name_uncompress(PyObject *self, PyObject *args)
+{
+    libbind_ns_msg *message;
+    libbind_ns_rr  *rr;
+    const u_char *msgStart, *msgEnd, *compressedName;
+    char fullName[MAXDNAME + 1];
+    int  length;
+
+    PyTypeObject *argType;
+    char         *argTypeStr;
+
+    if( !PyArg_ParseTuple(args, "OO", (PyObject *)&message, (PyObject *)&rr) )
+	return NULL;
+
+    /* First argument must be an ns_msg. */
+    argType    = (PyTypeObject *)(message->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
+	return NULL;
+    }
+
+    /* Second argument must be an ns_rr. */
+    argType    = (PyTypeObject *)(rr->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
+	return NULL;
+    }
+
+    /* It would be nice to validate whether the ns_rr came from the ns_msg. */
+
+    msgStart       = ns_msg_base(message->packet);
+    msgEnd         = ns_msg_end(message->packet);
+    compressedName = ns_rr_rdata(rr->record);
+
+    /* If the data is an MX record, then we need to skip two bytes to get to the hostname. */
+    if( ns_rr_type(rr->record) == ns_t_mx )
+	compressedName += 2;
+
+    bzero((void *)fullName, (size_t)(MAXDNAME + 1));
+    length = ns_name_uncompress(msgStart, msgEnd, compressedName, fullName, MAXDNAME);
+    if( length == -1 ) {
+	PyErr_SetString(PyExc_TypeError, "BIND cannot decompress this name");
+	return NULL;
+    }
+
+    return PyString_FromString(fullName);
+}
+
 static PyMethodDef libbind_methods[] = {
     {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
@@ -425,6 +484,8 @@ static PyMethodDef libbind_methods[] = {
     {"ns_rr_ttl"     , libbind_ns_rr_ttl     , METH_VARARGS, libbind_ns_rr_ttl_doc},
     {"ns_rr_rdlen"   , libbind_ns_rr_rdlen   , METH_VARARGS, libbind_ns_rr_rdlen_doc},
     {"ns_rr_rdata"   , libbind_ns_rr_rdata   , METH_VARARGS, libbind_ns_rr_rdata_doc},
+
+    {"ns_name_uncompress", libbind_ns_name_uncompress, METH_VARARGS, libbind_ns_name_uncompress_doc},
     {NULL, NULL}
 };
 

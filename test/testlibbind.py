@@ -219,6 +219,28 @@ class libbindTestCase(unittest.TestCase):
 		sectionVal = getattr(libbind, section)
 		self.assertEquals(libbind.ns_msg_count(msg, sectionVal), message['sections'][section])
 
+    def testReturnsRdata(self):
+	"""Test whether ns_name_uncompress returns the correct name"""
+	msg = libbind.ns_msg(self.responses[2]['data'])
+
+	# Query has no name record
+
+	# Answer
+	rr = libbind.ns_rr(msg, libbind.ns_s_an, 0)
+	assert(libbind.ns_name_uncompress(msg, rr) == 'smtp1.oreilly.com')
+	rr = libbind.ns_rr(msg, libbind.ns_s_an, 1)
+	assert(libbind.ns_name_uncompress(msg, rr) == 'smtp2.oreilly.com')
+
+	# Name servers
+	rr = libbind.ns_rr(msg, libbind.ns_s_ns, 0)
+	assert(libbind.ns_name_uncompress(msg, rr) == 'ns1.sonic.net')
+	rr = libbind.ns_rr(msg, libbind.ns_s_ns, 1)
+	assert(libbind.ns_name_uncompress(msg, rr) == 'ns2.sonic.net')
+	rr = libbind.ns_rr(msg, libbind.ns_s_ns, 2)
+	assert(libbind.ns_name_uncompress(msg, rr) == 'ns.oreilly.com')
+
+	# Additional is just A records
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(libbindTestCase, 'test') )
