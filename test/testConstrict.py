@@ -103,6 +103,12 @@ class testDNSFlags(unittest.TestCase):
 	    messageText = message['data']
 	    msg = Constrict.DNSMessage(messageText)
 	    self.assertEquals(msg.flags.type, 'response')
+    
+    def testGetsOpcode(self):
+	"""Test whether DNSFlags determines the proper opcodes"""
+	for message in self.queries + self.responses:
+	    msg = Constrict.DNSMessage(message['data'])
+	    self.assertEquals(msg.flags.opcode, message['flags']['ns_f_opcode'])
 
 def suite():
     s = unittest.TestSuite()

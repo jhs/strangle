@@ -88,6 +88,8 @@ class DNSFlags(object):
 	    self.type = 'response'
 	else:
 	    self.type = 'query'
+	
+	self.opcode = libbind.ns_msg_getflag(msg, libbind.ns_f_opcode)
     
 # TODO
 class DNSSection(object):
