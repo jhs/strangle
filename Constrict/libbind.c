@@ -44,7 +44,7 @@ static PyMethodDef libbind_methods[] = {
     {NULL, NULL}
 };
 
-static char ns_msg_doc[] =
+static char libbind_ns_msg_doc[] =
 "This is a Python type that wraps the libbind ns_msg structure.  It is useful\n\
 with the other libbind functions";
 
@@ -74,8 +74,8 @@ static PyTypeObject libbind_ns_msgType = {
     0,						/* tp_getattro */
     0,						/* tp_setattro */
     0,						/* tp_as_buffer */
-    Py_TPFLAGS_DEFAULT			,	/* tp_flags */
-    ns_msg_doc,					/* tp_doc */
+    Py_TPFLAGS_DEFAULT,				/* tp_flags */
+    libbind_ns_msg_doc,				/* tp_doc */
 };
 
 /* Initialize the extension. */
