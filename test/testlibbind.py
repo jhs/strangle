@@ -282,6 +282,26 @@ class libbindTestCase(unittest.TestCase):
 
 	# Additional is just A records
 
+    def testlibbind_ns_data_offset(self):
+	"""Test whether ns_data_offset returns the correct offsets"""
+	msg = libbind.ns_msg(self.responses[0]['data'])
+
+	# Query has no name record
+	rr = libbind.ns_rr(msg, libbind.ns_s_qd, 0)
+	assert libbind.ns_data_offset(msg, rr) is None
+
+	# Answer
+	rr = libbind.ns_rr(msg, libbind.ns_s_an, 0)
+	self.assertEquals(libbind.ns_data_offset(msg, rr), 49)
+
+	# Name servers
+	rr = libbind.ns_rr(msg, libbind.ns_s_ns, 0)
+	self.assertEquals(libbind.ns_data_offset(msg, rr), 65)
+
+	# Additional
+	rr = libbind.ns_rr(msg, libbind.ns_s_ar, 0)
+	self.assertEquals(libbind.ns_data_offset(msg, rr), 83)
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(libbindTestCase, 'test') )

@@ -480,6 +480,52 @@ libbind_ns_name_uncompress(PyObject *self, PyObject *args)
     return PyString_FromString(fullName);
 }
 
+static char libbind_ns_data_offset_doc[] =
+"Returns the offset in the raw message that contains the record data";
+
+static PyObject *
+libbind_ns_data_offset(PyObject *self, PyObject *args)
+{
+    libbind_ns_msg *message;
+    libbind_ns_rr  *rr;
+    const u_char *msgStart, *dataLocation;
+    long offset;
+
+    PyTypeObject *argType;
+    char         *argTypeStr;
+
+    if( !PyArg_ParseTuple(args, "OO", (PyObject *)&message, (PyObject *)&rr) )
+	return NULL;
+
+    /* First argument must be an ns_msg. */
+    argType    = (PyTypeObject *)(message->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
+	return NULL;
+    }
+
+    /* Second argument must be an ns_rr. */
+    argType    = (PyTypeObject *)(rr->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
+	return NULL;
+    }
+
+    /* It would be nice to validate whether the ns_rr came from the ns_msg. */
+
+    msgStart     = ns_msg_base(message->packet);
+    dataLocation = ns_rr_rdata(rr->record);
+
+    /* NULL data location means the record does not have data (e.g. for a query). */
+    if( dataLocation == (const u_char *)NULL )
+	return Py_None;
+
+    offset = dataLocation - msgStart;
+    return PyInt_FromLong(offset);
+}
+
 static PyMethodDef libbind_methods[] = {
     {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
@@ -493,6 +539,8 @@ static PyMethodDef libbind_methods[] = {
     {"ns_rr_rdata"   , libbind_ns_rr_rdata   , METH_VARARGS, libbind_ns_rr_rdata_doc},
 
     {"ns_name_uncompress", libbind_ns_name_uncompress, METH_VARARGS, libbind_ns_name_uncompress_doc},
+
+    {"ns_data_offset", libbind_ns_data_offset, METH_VARARGS, libbind_ns_data_offset_doc},
     {NULL, NULL}
 };
 
