@@ -255,10 +255,38 @@ libbind_ns_msg_count(PyObject *self, PyObject *args)
     return Py_BuildValue("i", (int)count);
 }
 
+static char libbind_ns_rr_name_doc[] =
+"Returns the name (i.e. usually host name) in an ns_rr record";
+
+static PyObject *
+libbind_ns_rr_name(PyObject *self, PyObject *args)
+{
+    PyObject *rr;
+    char *name;
+
+    PyTypeObject *argType;
+    char         *argTypeStr;
+
+    if( !PyArg_ParseTuple(args, "O", &rr) )
+	return NULL;
+
+    argType    = (PyTypeObject *)(rr->ob_type);
+    argTypeStr = argType->tp_name;
+    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
+	return NULL;
+    }
+
+    name = ns_rr_name(((libbind_ns_rr *)rr)->record);
+    return PyString_FromString(name);
+}
+
 static PyMethodDef libbind_methods[] = {
     {"ns_msg_id"     , libbind_ns_msg_id     , METH_VARARGS, libbind_ns_msg_id_doc},
     {"ns_msg_getflag", libbind_ns_msg_getflag, METH_VARARGS, libbind_ns_msg_getflag_doc},
     {"ns_msg_count"  , libbind_ns_msg_count  , METH_VARARGS, libbind_ns_msg_count_doc},
+
+    {"ns_rr_name"    , libbind_ns_rr_name    , METH_VARARGS, libbind_ns_rr_name_doc},
     {NULL, NULL}
 };
 

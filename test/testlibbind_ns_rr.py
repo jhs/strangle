@@ -27,7 +27,7 @@ class ns_rrTestCase(unittest.TestCase):
     """Tests for the wrapper around the libbind ns_rr struct"""
 
     def setUp(self):
-	self.packetData = file("data/www.company.example-query").read()
+	self.packetData = file("data/oreilly.com-response").read()
 	self.msg = libbind.ns_msg(self.packetData)
 
     def test000Exists(self):
@@ -57,9 +57,42 @@ class ns_rrTestCase(unittest.TestCase):
 	self.assertRaises(TypeError, libbind.ns_rr, self.msg, libbind.ns_s_ns, 100)
 
     def testParseValidMessage(self):
-	"""Test whether ns_rr initialization parses valid NS queries"""
+	"""Test whether ns_rr initialization parses valid NS messages"""
 	rr = libbind.ns_rr(self.msg, libbind.ns_s_qd, 0)
 	assert(type(rr) is libbind.ns_rr)
+
+    def testReturnsName(self):
+	"""Test whether ns_rr_name returns the correct name"""
+
+	# Query
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_qd, 0)
+	assert(libbind.ns_rr_name(rr) == 'oreilly.com')
+
+	# Answer
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 0)
+	assert(libbind.ns_rr_name(rr) == 'oreilly.com')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_an, 1)
+	assert(libbind.ns_rr_name(rr) == 'oreilly.com')
+
+	# Name servers
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 0)
+	assert(libbind.ns_rr_name(rr) == 'oreilly.com')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 1)
+	assert(libbind.ns_rr_name(rr) == 'oreilly.com')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ns, 2)
+	assert(libbind.ns_rr_name(rr) == 'oreilly.com')
+
+	# Additional
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 0)
+	assert(libbind.ns_rr_name(rr) == 'smtp1.oreilly.com')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 1)
+	assert(libbind.ns_rr_name(rr) == 'smtp2.oreilly.com')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 2)
+	assert(libbind.ns_rr_name(rr) == 'ns.oreilly.com')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 3)
+	assert(libbind.ns_rr_name(rr) == 'ns1.sonic.net')
+	rr = libbind.ns_rr(self.msg, libbind.ns_s_ar, 4)
+	assert(libbind.ns_rr_name(rr) == 'ns2.sonic.net')
 
 def suite():
     s = unittest.TestSuite()
