@@ -5,6 +5,30 @@ libbind DNS message parsing library.
 A useful reference for this software is DNS and BIND, 4th Edition from
 O'Reilly.
 
+== INSTALLATION ==
+
+Constrict is a standard distutils-driven Python package.  It also has a
+C language component that must be compiled against the BIND parsing
+library (libbind).  For Debian Sarge, you need the "bind-dev" package,
+as well as standard C development packages (gcc, libc6-dev, etc.)
+
+1. Uncompress the archive that you have downloaded.  By default, it will
+   extract to a directory named Constrict-<something>.
+2. Change to that directory and run the install command:
+
+   # python setup.py install
+
+3. Everything should compile properly and you should be able to use the
+   Constrict library from any location in your system.
+
+3. Everything should compile properly and you should be able to use the
+   Constrict library from any location in your system.
+
+   >>> import Constrict
+   >>> Constrict
+   <module 'Constrict' from '.../site-packages/Constrict/__init__.pyc'>
+   >>>
+
 Author: Jason Smith <jhs@oes.co.th>
         Open Enterprise Systems, Co., Ltd.
 	Bangkok, Thailand
