@@ -375,6 +375,12 @@ class testDNSRecord(unittest.TestCase):
 	rr = DNSRecord(msg, 'additional', 4)
 	self.assertEquals(rr.data, '208.201.224.33')
 
+    def testDynamicUpdate(self):
+        """Test that dynamic updates parse properly."""
+        msg = Constrict.libbind.ns_msg(file('data/dynamic-update').read())
+        rr = Constrict.DNSRecord(msg, 'answer', 0)
+        self.assertEquals(rr.data, "")
+
 def suite():
     s = unittest.TestSuite()
     s.addTest( unittest.makeSuite(testDNSMessage, 'test') )

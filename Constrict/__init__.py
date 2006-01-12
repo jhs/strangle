@@ -259,8 +259,10 @@ class DNSRecord(object):
 	self.queryClass = libbind.ns_rr_class(self.rr)
 	if self.queryClass == libbind.ns_c_in:
 	    self.queryClass = 'IN'
+	elif self.queryClass == libbind.ns_c_none:
+	    self.queryClass = 'None'
 	else:
-	    self.queryClass = 'Unknown'
+	    self.queryClass = 'Unknown (%d)' % self.queryClass
 	
 	self.type = libbind.ns_rr_type(self.rr)
 	typeDict = { libbind.ns_t_a     : 'A',
@@ -294,7 +296,10 @@ class DNSRecord(object):
 	    self.data = ""
 	else:
 	    if self.type == 'A':
-		self.data = socket.inet_ntoa(rdata)
+		if len(rdata) == 4:
+		    self.data = socket.inet_ntoa(rdata)
+		else:
+		    self.data = ''
 	    elif self.type in ('NS', 'CNAME', 'SOA', 'PTR'):
 		self.data = libbind.ns_name_uncompress(msg, self.rr)
 	    elif self.type == 'MX':
