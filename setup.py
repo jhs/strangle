@@ -22,7 +22,7 @@ libbind = Extension('Constrict.libbind',
 		   )
 
 setup( name         = 'Constrict',
-       version      = '0.2.1',
+       version      = '0.2.2',
        description  = 'Library for comprehending DNS messages using BIND parsing',
        license      = 'GNU GPL 2.0',
        author       = 'Open Enterprise Systems',
