@@ -2,7 +2,7 @@ This package is for parsing DNS messages as you would see them from a network
 capture or your own network application.  It is a Python interface to the
 libbind DNS message parsing library.
 
-A useful reference for this software is DNS and BIND, 4th Edition from
+A useful reference for this software is DNS and BIND, 5th Edition from
 O'Reilly.
 
 == INSTALLATION ==
