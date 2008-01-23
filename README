@@ -9,8 +9,9 @@ O'Reilly.
 
 Constrict is a standard distutils-driven Python package.  It also has a
 C language component that must be compiled against the BIND parsing
-library (libbind).  For Debian Sarge, you need the "bind-dev" package,
-as well as standard C development packages (gcc, libc6-dev, etc.)
+library (libbind).  For Debian, you need the "bind-dev" package,
+as well as standard C development packages (gcc, libc6-dev, etc.).  for
+RPM-based distributions, try the bind-devel package.
 
 1. Uncompress the archive that you have downloaded.  By default, it will
    extract to a directory named Constrict-<something>.
