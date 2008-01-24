@@ -21,8 +21,13 @@
 # Should be imported for testing
 import sys, os
 import random
+import glob
 
-baseDir  = ".."
+baseDir  = glob.glob('../build/lib*')[0]
+if not os.path.exists(baseDir):
+    sys.stderr.write("Cannot find build directory.  Try running 'setup.py build' first.\n")
+    sys.exit(1)
+
 if baseDir not in sys.path:
     sys.path.insert(0, baseDir)
 
