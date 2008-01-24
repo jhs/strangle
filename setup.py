@@ -22,7 +22,7 @@ libbind = Extension('Strangle.libbind',
 		   )
 
 setup( name         = 'Strangle',
-       version      = '0.2.2',
+       version      = '0.3.0',
        description  = 'Library for comprehending DNS messages using BIND parsing',
        license      = 'GNU GPL 2.0',
        author       = 'Proven Corporation',
