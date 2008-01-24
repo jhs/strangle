@@ -1,19 +1,19 @@
 /* libbind.c - A wrapper around the bind library
  *
- * This file is part of Constrict.
+ * This file is part of Strangle.
  *
- * Constrict is free software; you can redistribute it and/or modify
+ * Strangle is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Constrict is distributed in the hope that it will be useful,
+ * Strangle is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Constrict; if not, write to the Free Software
+ * along with Strangle; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
@@ -61,7 +61,7 @@ libbind_ns_msg_init(libbind_ns_msg *self, PyObject *args)
 static PyTypeObject libbind_ns_msgType = {
     PyObject_HEAD_INIT(NULL)
     0,						/* ob_size */
-    "Constrict.libbind.ns_msg",			/* tp_name */
+    "Strangle.libbind.ns_msg",			/* tp_name */
     sizeof(libbind_ns_msg),			/* tp_basicsize */
     0,						/* tp_itemsize */
     0,						/* tp_dealloc */
@@ -122,7 +122,7 @@ libbind_ns_rr_init(libbind_ns_rr *self, PyObject *args)
 
     messageType    = (PyTypeObject *)(firstArg->ob_type);
     messageTypeStr = messageType->tp_name;
-    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+    if( strcmp(messageTypeStr, "Strangle.libbind.ns_msg") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return -1;
     }
@@ -141,7 +141,7 @@ libbind_ns_rr_init(libbind_ns_rr *self, PyObject *args)
 static PyTypeObject libbind_ns_rrType = {
     PyObject_HEAD_INIT(NULL)
     0,						/* ob_size */
-    "Constrict.libbind.ns_rr",			/* tp_name */
+    "Strangle.libbind.ns_rr",			/* tp_name */
     sizeof(libbind_ns_rr),			/* tp_basicsize */
     0,						/* tp_itemsize */
     0,						/* tp_dealloc */
@@ -194,7 +194,7 @@ libbind_ns_msg_id(PyObject *self, PyObject *args)
 
     messageType    = (PyTypeObject *)(message->ob_type);
     messageTypeStr = messageType->tp_name;
-    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+    if( strcmp(messageTypeStr, "Strangle.libbind.ns_msg") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return NULL;
     }
@@ -221,7 +221,7 @@ libbind_ns_msg_getflag(PyObject *self, PyObject *args)
 
     messageType    = (PyTypeObject *)(message->ob_type);
     messageTypeStr = messageType->tp_name;
-    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+    if( strcmp(messageTypeStr, "Strangle.libbind.ns_msg") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return NULL;
     }
@@ -248,7 +248,7 @@ libbind_ns_msg_count(PyObject *self, PyObject *args)
 
     messageType    = (PyTypeObject *)(message->ob_type);
     messageTypeStr = messageType->tp_name;
-    if( strcmp(messageTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+    if( strcmp(messageTypeStr, "Strangle.libbind.ns_msg") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return NULL;
     }
@@ -274,7 +274,7 @@ libbind_ns_rr_name(PyObject *self, PyObject *args)
 
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -300,7 +300,7 @@ libbind_ns_rr_type(PyObject *self, PyObject *args)
 
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -326,7 +326,7 @@ libbind_ns_rr_class(PyObject *self, PyObject *args)
 
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -352,7 +352,7 @@ libbind_ns_rr_ttl(PyObject *self, PyObject *args)
 
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -378,7 +378,7 @@ libbind_ns_rr_rdlen(PyObject *self, PyObject *args)
 
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -405,7 +405,7 @@ libbind_ns_rr_rdata(PyObject *self, PyObject *args)
 
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -449,7 +449,7 @@ libbind_ns_name_uncompress(PyObject *self, PyObject *args)
     /* First argument must be an ns_msg. */
     argType    = (PyTypeObject *)(message->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_msg") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return NULL;
     }
@@ -457,7 +457,7 @@ libbind_ns_name_uncompress(PyObject *self, PyObject *args)
     /* Second argument must be an ns_rr. */
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -502,7 +502,7 @@ libbind_ns_data_offset(PyObject *self, PyObject *args)
     /* First argument must be an ns_msg. */
     argType    = (PyTypeObject *)(message->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_msg") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_msg") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_msg object");
 	return NULL;
     }
@@ -510,7 +510,7 @@ libbind_ns_data_offset(PyObject *self, PyObject *args)
     /* Second argument must be an ns_rr. */
     argType    = (PyTypeObject *)(rr->ob_type);
     argTypeStr = argType->tp_name;
-    if( strcmp(argTypeStr, "Constrict.libbind.ns_rr") != 0 ) {
+    if( strcmp(argTypeStr, "Strangle.libbind.ns_rr") != 0 ) {
 	PyErr_SetString(PyExc_TypeError, "Argument must be a ns_rr object");
 	return NULL;
     }
@@ -562,7 +562,7 @@ initlibbind(void)
     if( PyType_Ready(&libbind_ns_rrType) < 0 )
 	return;
 
-    m = Py_InitModule3("Constrict.libbind", libbind_methods, libbind_doc);
+    m = Py_InitModule3("Strangle.libbind", libbind_methods, libbind_doc);
 
     if( m == NULL )
 	return;

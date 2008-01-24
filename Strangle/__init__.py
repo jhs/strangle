@@ -1,19 +1,19 @@
-# Constrict.py - An object-oriented look at DNS messages based on libbind
+# Strangle.py - An object-oriented look at DNS messages based on libbind
 #
-# This file is part of Constrict.
+# This file is part of Strangle.
 #
-# Constrict is free software; you can redistribute it and/or modify
+# Strangle is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# Constrict is distributed in the hope that it will be useful,
+# Strangle is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Constrict; if not, write to the Free Software
+# along with Strangle; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 """An object-oriented library for comprehending DNS messages using BIND parsing"""
@@ -22,13 +22,13 @@ import libbind
 import socket
 import struct
 
-class ConstrictError(StandardError):
+class StrangleError(StandardError):
     """Error parsing DNS packet"""
 
-class DNSSectionError(ConstrictError):
+class DNSSectionError(StrangleError):
     """Error generating a message section"""
 
-class DNSRecordError(ConstrictError):
+class DNSRecordError(StrangleError):
     """Error accessing record in message"""
 
 class DNSMessage(object):
@@ -55,7 +55,7 @@ class DNSMessage(object):
 	try:
 	    msg = libbind.ns_msg(packetData)
 	except TypeError:
-	    raise ConstrictError, "Failed to parse the packet"
+	    raise StrangleError, "Failed to parse the packet"
 	
 	self.msg = msg
     
@@ -104,7 +104,7 @@ class DNSFlags(object):
 	"""Fills in all flag values to the object members"""
 
 	if type(msg) is not libbind.ns_msg:
-	    raise ConstrictError, "DNSFlags initialized but without an ns_msg"
+	    raise StrangleError, "DNSFlags initialized but without an ns_msg"
 
 	isResponse = libbind.ns_msg_getflag(msg, libbind.ns_f_qr)
 	if isResponse:

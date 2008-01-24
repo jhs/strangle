@@ -13,21 +13,21 @@ if sys.platform == 'sunos5':
     # it works.  See the GCC man page on -mimpure-text.
     extras['extra_link_args'] = ['-mimpure-text']
 
-libbind = Extension('Constrict.libbind',
+libbind = Extension('Strangle.libbind',
 		    [
-		     'Constrict/libbind.c',
+		     'Strangle/libbind.c',
 		    ],
 		    libraries=['bind'],
 		    **extras
 		   )
 
-setup( name         = 'Constrict',
+setup( name         = 'Strangle',
        version      = '0.2.2',
        description  = 'Library for comprehending DNS messages using BIND parsing',
        license      = 'GNU GPL 2.0',
        author       = 'Proven Corporation',
        author_email = 'jhs@proven-corporation.com',
        url          = 'http://www.proven-corporation.com/software/strangle/',
-       packages     = ['Constrict'],
+       packages     = ['Strangle'],
        ext_modules  = [ libbind ],
      )

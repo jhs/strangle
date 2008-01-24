@@ -7,33 +7,33 @@ O'Reilly.
 
 == INSTALLATION ==
 
-Constrict is a standard distutils-driven Python package.  It also has a
+Strangle is a standard distutils-driven Python package.  It also has a
 C language component that must be compiled against the BIND parsing
 library (libbind).  For Debian, you need the "bind-dev" package,
 as well as standard C development packages (gcc, libc6-dev, etc.).  for
 RPM-based distributions, try the bind-devel package.
 
 1. Uncompress the archive that you have downloaded.  By default, it will
-   extract to a directory named Constrict-<something>.
+   extract to a directory named Strangle-<something>.
 2. Change to that directory and run the install command:
 
    # python setup.py install
 
 3. Everything should compile properly and you should be able to use the
-   Constrict library from any location in your system.
+   Strangle library from any location in your system.
 
-   >>> import Constrict
-   >>> Constrict
-   <module 'Constrict' from '.../site-packages/Constrict/__init__.pyc'>
+   >>> import Strangle
+   >>> Strangle
+   <module 'Strangle' from '.../site-packages/Strangle/__init__.pyc'>
    >>>
 
 == Copyright Information ==
 
-Constrict is licensed to you under the terms of the GNU General public
+Strangle is licensed to you under the terms of the GNU General public
 license, version 2.  For the full text of this license, please see the
 COPYING file which accompanies these instructions.
 
-Proven Corporation offers software and expertise based on Constrict.
+Proven Corporation offers software and expertise based on Strangle.
 Please see our web site.  Thank you very much.
 
 Author: Jason Smith <jhs@proven-corporation.com>
