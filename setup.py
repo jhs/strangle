@@ -21,9 +21,50 @@ libbind = Extension('Strangle.libbind',
 		    **extras
 		   )
 
+long_desc = """
+Summary
+=======
+
+Strangle is BIND for Python: a Python library for parsing DNS messages
+using libbind. Strangle allows you to see DNS messages in two ways:
+
+  * Direct access to the libbind parsing functions (C-style)
+  * A Python object with various meaningful attributes (OO-style)
+
+Demo
+====
+
+Here is an example of how simple it is to parse DNS messages::
+
+  >>> import Strangle
+  >>> msgFile = file("test/data/www.microsoft.com-query")
+  >>> msg = Strangle.DNSMessage(msgFile)
+  >>> msg.id
+  47096
+  >>> print msg
+  ID     : 47096
+  Headers:
+    Type               : question
+    Opcode             : 0
+    Authoritative      : False
+    Truncated          : False
+    Recursion Desired  : True
+    Recursion Available: False
+    Response Code      : 0
+  
+  ;; QUESTION SECTION:
+  www.microsoft.com.nsatc.net 0       IN      A
+  
+  >>> msg.flags.type
+  'question'
+  >>> msg.flags.recursionDesired
+  True
+"""
+
 setup( name         = 'Strangle',
-       version      = '0.3.0',
+       version      = '0.3.1',
        description  = 'Library for comprehending DNS messages using BIND parsing',
+       long_description = long_desc,
        license      = 'GNU GPL 2.0',
        author       = 'Proven Corporation',
        author_email = 'jhs@proven-corporation.com',
