@@ -61,10 +61,29 @@ Here is an example of how simple it is to parse DNS messages::
   True
 """
 
+classifiers = """
+    Development Status :: 5 - Production/Stable
+    Environment :: No Input/Output (Daemon)
+    Intended Audience :: Developers
+    License :: OSI Approved
+    License :: OSI Approved :: GNU General Public License (GPL)
+    Operating System :: POSIX
+    Operating System :: POSIX :: Linux
+    Operating System :: Unix
+    Programming Language :: C
+    Programming Language :: Python
+    Topic :: Internet :: Name Service (DNS)
+    Topic :: Software Development :: Libraries
+    Topic :: Software Development :: Libraries :: Python Modules
+    Topic :: System :: Monitoring
+    Topic :: System :: Networking
+"""
+
 setup( name         = 'Strangle',
        version      = '0.3.1',
        description  = 'Library for comprehending DNS messages using BIND parsing',
        long_description = long_desc,
+       classifiers  = [line.strip() for line in classifiers.split('\n') if line != ""],
        license      = 'GNU GPL 2.0',
        author       = 'Proven Corporation',
        author_email = 'jhs@proven-corporation.com',
