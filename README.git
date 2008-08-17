@@ -1,8 +1,0 @@
-======
-Notice
-======
-
-Strangle is developed using bzr for version control.  The git repository
-is a read-only dump so that sites like ohloh can track it.  While it is
-updated daily and should contain an essentially identical version of the
-code, the bzr branch is the official software version.
