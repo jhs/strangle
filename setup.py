@@ -13,11 +13,20 @@ if sys.platform == 'sunos5':
     # it works.  See the GCC man page on -mimpure-text.
     extras['extra_link_args'] = ['-mimpure-text']
 
+elif sys.platform == 'linux2':
+    import platform
+
+    if platform.machine() == 'x86_64':
+        # Link libresolv into the final library.
+        extras['libraries'] = ['resolv']
+    else:
+        # Compile libresolv into the final library.
+        extras['extra_link_args'] = ['/usr/lib/libresolv.a']
+
 libbind = Extension('Strangle.libbind',
 		    [
 		     'Strangle/libbind.c',
 		    ],
-		    extra_link_args=['/usr/lib/libresolv.a'],
 		    **extras
 		   )
 
