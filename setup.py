@@ -8,7 +8,7 @@ if sys.platform == 'sunos5':
     extras['include_dirs'] = ['/usr/local/bind/include']
     extras['library_dirs'] = ['/usr/local/bind/lib']
 
-    # This allows non-PIC code (in our case, libbind.a) to become a shared
+    # This allows non-PIC code (in our case, libresolv.a) to become a shared
     # library.  It is not exactly the same as a true shared library, but
     # it works.  See the GCC man page on -mimpure-text.
     extras['extra_link_args'] = ['-mimpure-text']
@@ -17,7 +17,7 @@ libbind = Extension('Strangle.libbind',
 		    [
 		     'Strangle/libbind.c',
 		    ],
-		    libraries=['bind'],
+		    extra_link_args=['/usr/lib/libresolv.a'],
 		    **extras
 		   )
 
@@ -80,7 +80,7 @@ classifiers = """
 """
 
 setup( name         = 'Strangle',
-       version      = '0.3.1',
+       version      = '0.3.2',
        description  = 'Library for comprehending DNS messages using BIND parsing',
        long_description = long_desc,
        classifiers  = [line.strip() for line in classifiers.split('\n') if line != ""],
