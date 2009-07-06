@@ -8,9 +8,12 @@ O'Reilly.
 Installation
 ============
 
-Strangle is a standard distutils-driven Python package.  It also has a
-C language component that must be compiled against the BIND parsing
-library (libbind).  For Debian, you need the "bind-dev" package,
+Strangle is a standard distutils-driven Python package.  For all
+platforms, you will need the C and Python development environment (e.g.
+for .deb distributions, libc6-dev and python-dev; for RPM distributions,
+python-devel).  Strangle
+also has a C language component that must be compiled against the BIND
+parsing library (libbind).  For Debian, you need the "bind-dev" package,
 as well as standard C development packages (gcc, libc6-dev, etc.).  for
 RPM-based distributions, try the bind-devel package.
 
