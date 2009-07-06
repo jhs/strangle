@@ -39,7 +39,7 @@ elif sys.platform == 'linux2':
             # Configure for 9.04 Jaunty.  By now, libresolv.so exports the symbols we need.
             extras['libraries'] = ['resolv']
         else:
-            raise Exception, "Unknown Ubuntu release: %s" % release
+            sys.stderr.write("Warning: Building for unknown Ubuntu release: %s\n" % release)
 
 
 libbind = Extension('Strangle.libbind',
