@@ -14,14 +14,22 @@ if sys.platform == 'sunos5':
     extras['extra_link_args'] = ['-mimpure-text']
 
 elif sys.platform == 'linux2':
+    import os
+    import re
     import platform
 
-    if platform.machine() == 'x86_64':
-        # Link libresolv into the final library.
-        extras['libraries'] = ['resolv']
-    else:
-        # Compile libresolv into the final library.
-        extras['extra_link_args'] = ['/usr/lib/libresolv.a']
+    if os.path.exists('/etc/lsb-release'):
+        # Configure for Ubuntu.
+        release = None
+        for line in file('/etc/lsb-release').readlines():
+            match = re.search(r'DISTRIB_RELEASE=(.*)$', line)
+            if match:
+                release = match.groups()[0]
+        if release == '8.04':
+            # Configure for Hardy / LTS.
+            extras['extra_link_args'] = ['/usr/lib/libresolv.a']
+        else:
+            raise Exception, "Unknown Ubuntu release: %s" % release
 
 libbind = Extension('Strangle.libbind',
 		    [
