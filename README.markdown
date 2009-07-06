@@ -37,11 +37,12 @@ Supported Platforms
 
 These platforms are tested and supported in this version of Strangle:
 
-* Ubuntu 8.04 Long-Term Support ("Hardy")
-  * i386 builds from source
-  * For amd64, you must install the libbind4 and libbind4-dev packages from
+* Ubuntu
+  * 8.04 Long-Term Support ("Hardy"): i386 builds from source; for amd64,
+    you must install the libbind4 and libbind4-dev packages from
     the Debian Squeeze release or later.  The packages have very basic
     dependencies and install into Ubuntu trivially.
+  * 9.04 ("Jaunty"): amd64
 
 If you can confirm that this package builds for other architectures, please
 contact Jason Smith at the address below.
@@ -49,7 +50,7 @@ contact Jason Smith at the address below.
 Untested Platforms
 ==================
 
-* Ubuntu 9.04, both arches
+* Ubuntu 9.04, i386
 * Solaris 10, both arches
 * OpenSolaris, both arches
 * CentOS, both arches

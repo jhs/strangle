@@ -35,6 +35,9 @@ elif sys.platform == 'linux2':
             else:
                 # Static link against libc's code.
                 extras['extra_link_args'] = ['/usr/lib/libresolv.a']
+        elif release == '9.04':
+            # Configure for 9.04 Jaunty.  By now, libresolv.so exports the symbols we need.
+            extras['libraries'] = ['resolv']
         else:
             raise Exception, "Unknown Ubuntu release: %s" % release
 
