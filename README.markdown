@@ -32,6 +32,26 @@ RPM-based distributions, try the bind-devel package.
         <module 'Strangle' from '.../site-packages/Strangle/__init__.pyc'>
         >>>
 
+Supported Platforms
+===================
+
+These platforms are tested and supported in this version of Strangle:
+
+* Ubuntu 8.04 Long-Term Support ("Hardy"): i386
+
+If you can confirm that this package builds for other architectures, please
+contact Jason Smith at the address below.
+
+Untested Platforms
+==================
+
+* Ubuntu LTS x86_64
+* Ubuntu 9.04, both arches
+* Solaris 10, both arches
+* OpenSolaris, both arches
+* CentOS, both arches
+* OpenSUSE, both arches
+
 Copyright Information
 =====================
 
