@@ -5,7 +5,8 @@ libbind DNS message parsing library.
 A useful reference for this software is DNS and BIND, 5th Edition from
 O'Reilly.
 
-== INSTALLATION ==
+Installation
+============
 
 Strangle is a standard distutils-driven Python package.  It also has a
 C language component that must be compiled against the BIND parsing
@@ -15,19 +16,21 @@ RPM-based distributions, try the bind-devel package.
 
 1. Uncompress the archive that you have downloaded.  By default, it will
    extract to a directory named Strangle-<something>.
+
 2. Change to that directory and run the install command:
 
-   # python setup.py install
+        # python setup.py install
 
 3. Everything should compile properly and you should be able to use the
    Strangle library from any location in your system.
 
-   >>> import Strangle
-   >>> Strangle
-   <module 'Strangle' from '.../site-packages/Strangle/__init__.pyc'>
-   >>>
+        >>> import Strangle
+        >>> Strangle
+        <module 'Strangle' from '.../site-packages/Strangle/__init__.pyc'>
+        >>>
 
-== Copyright Information ==
+Copyright Information
+=====================
 
 Strangle is licensed to you under the terms of the GNU General public
 license, version 2.  For the full text of this license, please see the
@@ -36,7 +39,9 @@ COPYING file which accompanies these instructions.
 Proven Corporation offers software and expertise based on Strangle.
 Please see our web site.  Thank you very much.
 
-Author: Jason Smith <jhs@proven-corporation.com>
-        Proven Corporation Co., Ltd.
-	Bangkok, Thailand
-	http://www.proven-corporation.com
+Author:
+
+    Jason Smith <jhs@proven-corporation.com>
+    Proven Corporation Co., Ltd.
+    Bangkok, Thailand
+    http://www.proven-corporation.com
