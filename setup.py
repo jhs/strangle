@@ -18,6 +18,8 @@ elif sys.platform == 'linux2':
     import re
     import platform
 
+    is_64 = platform.machine() == 'x86_64'
+
     if os.path.exists('/etc/lsb-release'):
         # Configure for Ubuntu.
         release = None
@@ -27,9 +29,15 @@ elif sys.platform == 'linux2':
                 release = match.groups()[0]
         if release == '8.04':
             # Configure for Hardy / LTS.
-            extras['extra_link_args'] = ['/usr/lib/libresolv.a']
+            if is_64:
+                # Dynamic link against the (backported) libbind4 package.
+                extras['libraries'] = ['bind']
+            else:
+                # Static link against libc's code.
+                extras['extra_link_args'] = ['/usr/lib/libresolv.a']
         else:
             raise Exception, "Unknown Ubuntu release: %s" % release
+
 
 libbind = Extension('Strangle.libbind',
 		    [
