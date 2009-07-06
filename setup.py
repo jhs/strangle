@@ -41,6 +41,17 @@ elif sys.platform == 'linux2':
         else:
             sys.stderr.write("Warning: Building for unknown Ubuntu release: %s\n" % release)
 
+    elif os.path.exists('/etc/redhat-release'):
+        # Configure for CentOS / RHEL.
+        line = file('/etc/redhat-release').read()
+        match = re.search(r'release (.*) \(', line)
+        release = match.groups()[0]
+        if release == '5.3':
+            # Dynamic link against libbind from bind-libs.
+            extras['libraries'] = ['bind']
+        else:
+            sys.stderr.write("Warning: Building for unknown Red Hat release: %s\n" % release)
+
 
 libbind = Extension('Strangle.libbind',
 		    [

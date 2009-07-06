@@ -43,6 +43,8 @@ These platforms are tested and supported in this version of Strangle:
     the Debian Squeeze release or later.  The packages have very basic
     dependencies and install into Ubuntu trivially.
   * 9.04 ("Jaunty"): amd64
+* CentOS 5.3 (probably RHEL too), i386: Requires the bind-libbind-devel
+  package to build.
 
 If you can confirm that this package builds for other architectures, please
 contact Jason Smith at the address below.
@@ -53,7 +55,7 @@ Untested Platforms
 * Ubuntu 9.04, i386
 * Solaris 10, both arches
 * OpenSolaris, both arches
-* CentOS, both arches
+* CentOS, x86_64
 * OpenSUSE, both arches
 
 Copyright Information
