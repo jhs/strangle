@@ -46,12 +46,11 @@ elif sys.platform == 'linux2':
         line = file('/etc/redhat-release').read()
         match = re.search(r'release (.*) \(', line)
         release = match.groups()[0]
-        if release == '5.3':
-            # Dynamic link against libbind from bind-libs.
-            extras['libraries'] = ['bind']
-        else:
+        if release != '5.3':
             sys.stderr.write("Warning: Building for unknown Red Hat release: %s\n" % release)
 
+        # Dynamic link against libbind from bind-libs.
+        extras['libraries'] = ['bind']
 
 libbind = Extension('Strangle.libbind',
 		    [
