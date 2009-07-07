@@ -21,25 +21,38 @@ elif sys.platform == 'linux2':
     is_64 = platform.machine() == 'x86_64'
 
     if os.path.exists('/etc/lsb-release'):
-        # Configure for Ubuntu.
-        release = None
-        for line in file('/etc/lsb-release').readlines():
-            match = re.search(r'DISTRIB_RELEASE=(.*)$', line)
-            if match:
-                release = match.groups()[0]
-        if release == '8.04':
-            # Configure for Hardy / LTS.
-            if is_64:
-                # Dynamic link against the (backported) libbind4 package.
-                extras['libraries'] = ['bind']
-            else:
-                # Static link against libc's code.
-                extras['extra_link_args'] = ['/usr/lib/libresolv.a']
-        elif release == '9.04':
-            # Configure for 9.04 Jaunty.  By now, libresolv.so exports the symbols we need.
+        if os.path.exists('/etc/SuSE-release'):
+            # Configure for openSUSE / SLED.
+            release = None
+            for line in file('/etc/SuSE-release').readlines():
+                match = re.search(r'VERSION = (.*)$', line)
+                if match:
+                    release = match.groups()[0]
+            if release != '11.1':
+                sys.stderr.write("Warning: Building for unknown SuSE release: %s\n" % release)
+
+            # Dynamic link against glibc.
             extras['libraries'] = ['resolv']
         else:
-            sys.stderr.write("Warning: Building for unknown Ubuntu release: %s\n" % release)
+            # Configure for Ubuntu.
+            release = None
+            for line in file('/etc/lsb-release').readlines():
+                match = re.search(r'DISTRIB_RELEASE=(.*)$', line)
+                if match:
+                    release = match.groups()[0]
+            if release == '8.04':
+                # Configure for Hardy / LTS.
+                if is_64:
+                    # Dynamic link against the (backported) libbind4 package.
+                    extras['libraries'] = ['bind']
+                else:
+                    # Static link against libc's code.
+                    extras['extra_link_args'] = ['/usr/lib/libresolv.a']
+            elif release == '9.04':
+                # Configure for 9.04 Jaunty.  By now, libresolv.so exports the symbols we need.
+                extras['libraries'] = ['resolv']
+            else:
+                sys.stderr.write("Warning: Building for unknown Ubuntu release: %s\n" % release)
 
     elif os.path.exists('/etc/redhat-release'):
         # Configure for CentOS / RHEL.
