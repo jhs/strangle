@@ -54,6 +54,18 @@ elif sys.platform == 'linux2':
             else:
                 sys.stderr.write("Warning: Building for unknown Ubuntu release: %s\n" % release)
 
+    elif os.path.exists('/etc/debian_version'):
+        # Configure for Debian.
+        release = file('/etc/debian_version').readline().strip()
+        if release != '5.0':
+            sys.stderr.write("Warning: Building for unknown Debian release: %s\n" % release)
+
+        if is_64:
+            # Dynamic link against the (backported) libbind4 package.
+            extras['libraries'] = ['bind']
+        else:
+            # Static link against libc's code.
+            extras['extra_link_args'] = ['/usr/lib/libresolv.a']
     elif os.path.exists('/etc/redhat-release'):
         # Configure for CentOS / RHEL.
         line = file('/etc/redhat-release').read()

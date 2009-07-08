@@ -45,6 +45,7 @@ These platforms are tested and supported in this version of Strangle:
   * 9.04 ("Jaunty"): amd64 and i386; builds from source
 * CentOS 5.3 (probably RHEL), i386 and x86_64: Requires the
   bind-libbind-devel package to build.
+* Debian 5.0 ("Lenny"): i386 builds from source
 * openSUSE 11.1, i586 and x86_64; builds from source
 
 If you can confirm that this package builds for other architectures, please
@@ -53,6 +54,7 @@ contact Jason Smith at the address below.
 Untested Platforms
 ==================
 
+* Debian 5.0 amd64
 * Solaris 10, both arches
 * OpenSolaris, both arches
 
