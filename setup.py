@@ -64,6 +64,14 @@ elif sys.platform == 'linux2':
 
         # Dynamic link against libbind from bind-libs.
         extras['libraries'] = ['bind']
+    else:
+        # Configure for a general (whatever that means) Linux system.
+        sys.stderr.write("Warning: Building for unknown Linux distribution")
+        extras['libraries'] = ['resolv']
+
+#
+# Actual package configuration begins here.
+#
 
 libbind = Extension('Strangle.libbind',
 		    [
